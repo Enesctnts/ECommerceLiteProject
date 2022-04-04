@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using ECommerceLiteEntity.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,6 +32,10 @@ namespace ECommerceLiteEntity.IdentityModels
 
         //ToDo: Guid 'in kaç haneli oldugunu bakıp buraya string ile length ile attribute tanımlanacaktır.
         public string ActivationCode { get; set; }
+
+        public virtual List<Admin> AdminList { get; set; }
+        public virtual List<Customer> CustomerList { get; set; }
+        public virtual List<PassiveUser> PassiveUserList { get; set; }
 
     }
 }
