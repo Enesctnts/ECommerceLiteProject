@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ECommerceLiteEntity.Models
 {
+    [Table("Orders")]
     public class Order:Base<int>
     {
         [Required]
@@ -17,8 +18,11 @@ namespace ECommerceLiteEntity.Models
         public string OrderNumber { get; set; }
 
         //Kim bu siparişi verdi?
+        public string CustomerTCNumber { get; set; }
 
-       
+        [ForeignKey("CustomerTCNumber")]
+        public virtual Customer Customer { get; set; }
+
 
         //Bu siparişin içeriğinde neler var? Ne almış?
         public virtual List<OrderDetail> OrderDetails { get; set; }

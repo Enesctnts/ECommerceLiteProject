@@ -15,6 +15,7 @@ namespace ECommerceLiteEntity.Models
         public string UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public virtual ApplicationUser Application { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual List<Order> Orders { get; set; }
     }
 }
