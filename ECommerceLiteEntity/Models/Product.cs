@@ -42,6 +42,7 @@ namespace ECommerceLiteEntity.Models
         public virtual Category Category { get; set; }
 
         public virtual List<OrderDetail> OrderDetails { get; set; }
+        public virtual List<ProductPicture> ProductPictures { get; set; }
 
     }
 }
