@@ -19,7 +19,7 @@ namespace ECommerceLiteEntity.Models
         [Required]
         [StringLength(500, MinimumLength = 2, ErrorMessage = "Kategori açıklaması 2 ile 500 karakter aralıgında olmalıdır")]
         [Display(Name = "Kategori Açıklaması")]
-        public int CategoryDescription { get; set; } 
+        public string CategoryDescription { get; set; } 
 
         public int? BaseCategoryId { get; set; } // int normalde asla null değer olamaz! int in yanna ? yazarsak Nullable oluruz.
         //public Nullable<int> BaseCategoryId { get; set; } //yukardakinden önce bu kullanılırdı.

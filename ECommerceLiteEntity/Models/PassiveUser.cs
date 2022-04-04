@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ECommerceLiteEntity.Models
 {
     [Table("PassiveUsers")]
-    public class PassiveUser
+    public class PassiveUser:PersonBase
     {
         //Identity model ile bize verilen tablodaki Id buraya foreignKey olacaktır.
         public string UserId { get; set; }
