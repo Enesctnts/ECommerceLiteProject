@@ -8,7 +8,7 @@ using ECommerceLiteDAL;
 
 namespace ECommerceLiteBLL.Repository
 {
-    public abstract class RepositoryBase<T,Id> where T:class, new()
+    public abstract class RepositoryBase<T,Id> where T:class,new()
     {
         protected static MyContext dbContext;
 

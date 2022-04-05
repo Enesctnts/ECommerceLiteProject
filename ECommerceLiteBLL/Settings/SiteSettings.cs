@@ -31,8 +31,7 @@ namespace ECommerceLiteBLL.Settings
                     message.Subject = model.Subject;
                     message.IsBodyHtml = true;
                     message.Body = model.Message;
-                    message.BodyEncoding = Encoding.UTF8;
-
+                    message.BodyEncoding = Encoding.UTF8;  
 
                     if (!string.IsNullOrEmpty(model.Cc)) // modeldeki cc boş değilse
                     {
