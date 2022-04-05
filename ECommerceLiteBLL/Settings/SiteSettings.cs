@@ -60,9 +60,40 @@ namespace ECommerceLiteBLL.Settings
             catch (Exception ex)
             {
                 //To Do: ex loglanacak
-                throw;
+                
             }
         }
 
+        public static string StringCharacterConverter(string name)
+        {
+            string resultString = name
+            .Replace("'", "")
+            .Replace(" ", "-")
+            .Replace("<", "")
+            .Replace(">", "")
+            .Replace("&", "")
+            .Replace("[", "")
+            .Replace("!", "")
+            .Replace("]", "")
+            .Replace("ı", "i")
+            .Replace("ö", "o")
+            .Replace("ü", "u")
+            .Replace("ş", "s")
+            .Replace("ç", "c")
+            .Replace("ğ", "g")
+            .Replace("İ", "I")
+            .Replace("Ö", "O")
+            .Replace("Ü", "U")
+            .Replace("Ş", "S")
+            .Replace("Ç", "C")
+            .Replace("Ğ", "G")
+            .Replace("|", "")
+            .Replace(".", "-")
+            .Replace("?", "-")
+            .Replace(";", "-");
+
+            return resultString.ToLower();
+        }
+        
     }
 }
