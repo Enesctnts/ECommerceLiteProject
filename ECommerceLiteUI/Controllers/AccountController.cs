@@ -187,11 +187,12 @@ namespace ECommerceLiteUI.Controllers
                     ViewBag.ActivationResult = $"Merhaba sayın{user.Name} {user.Surname}, aktifleştirme işleminiz başarılıdır! Giriş yapıp sistemi kullanabilirsiniz";
                     return View();
 
-
-
                 }
 
+                //Not: Müsait oldugunuzda bireysel bir beyin fırtınası yapabilirsiniz. Kendinize şu soruyu sorun ! PassiveUser null gelirse nasıl bir yol izlenileblir? PassiveUser null gelmesi çok büyük bir problem mi? Customerda bu kişi kayıtlı mı? Customerda bir proble yok.. Customer kayıtlı değilse Problem varr!!!
 
+                //Buraya yazılması gereken mini minnacık kodları şimdilik size bırakmış gibi yapıyorum
+                return View();
             }
             catch (Exception ex)
             {
