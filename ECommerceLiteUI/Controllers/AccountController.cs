@@ -202,5 +202,82 @@ namespace ECommerceLiteUI.Controllers
 
             }
         }
+    
+    
+        [HttpGet]
+        [Authorize]
+        public ActionResult UserProfile()
+        {
+            //Login olmuş kişinin id bilgisini alalım 
+            var user = myUserManager.FindById(HttpContext.User.Identity.GetUserId());
+            if (user !=null)
+            {
+            //Kişi bulacagız ve mevcut bilgileri ProfileViewModele atayıp sayfayla göndereceğiz.
+                ProfileViewModel model = new ProfileViewModel()
+                {
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    Email = user.Email,
+                    TCNumber = user.UserName
+                };
+                return View(model);
+            }
+            //User null ise (temkinli davrandık...)
+            ModelState.AddModelError("", "Beklenmedik bir sorun oluşmuş olabilir mi ? Giriş yapıp,tekrar deneyiniz! Sizinle tekrar buluşalım!");
+            return View();
+
+        }
+    
+        
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UserProfile(ProfileViewModel model)
+        {
+            try
+            {
+                //Sisteme kayıt olmuş ve login ile giriş yapmış kişi  hesabıma tıkladı. Bilgilerini gördü.Bilgilerini gördü. Bilgilerinde değişiklik yaptı.Biz burada kontrol edeceğiz.Yapılan değişikleri tespit edip db'mizi güncelleyebileceğiz.
+                var user = myUserManager.FindById(HttpContext.User.Identity.GetUserId());
+                if (user==null)
+                {
+                    ModelState.AddModelError("", "MEvcut kullanıcı bilgilerinize ulaşılamadıgı için işlem yapamıyoruz.");
+                    return View(model);
+
+                }
+                //Bir user herhangi bir bilgisini değiştirecekse Parolasını girmek zorunda.
+                //Bu nedenle model ile gelen parola Db'deki parola ile eşleşiyor mu diye bakmak lazım...
+                if (myUserManager.PasswordHasher.VerifyHashedPassword(user.PasswordHash,model.Password)==PasswordVerificationResult.Failed)
+                {
+                    ModelState.AddModelError("", "Mevcut şifrenizi yanlış girdiğiniz için güncelleyemedik! lütfen tekrar deneyiniz!");
+                    return View(model);
+                }
+
+                //Başarılıysa yani parolayı doğru yazdı!
+                //bilgileri güncelleyeceğiz
+
+                user.Name = model.Name;
+                user.Surname = model.Surname;
+                await myUserManager.UpdateAsync(user);
+                ViewBag.Result = "Bilgileriniz güncellendi";
+                var updatedModel = new ProfileViewModel()
+                {
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    TCNumber = user.UserName,
+                    Email = user.Email
+                };
+                return View(updatedModel);
+
+
+            }
+            catch (Exception ex)
+            {
+                // ex loglanacak
+                ModelState.AddModelError("", "Beklenmedik bir hata oluştu! Tekrar deneyiniz");
+                return View(model);
+            }
+        }
+ 
+    
     }
 } 
