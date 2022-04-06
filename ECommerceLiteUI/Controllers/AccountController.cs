@@ -279,5 +279,64 @@ namespace ECommerceLiteUI.Controllers
         }
  
     
+        [HttpGet]
+        [Authorize]
+        public ActionResult UpdatePassword()
+        {
+            var user = myUserManager.FindById(HttpContext.User.Identity.GetUserId());
+            if (user!=null)
+            {
+                ProfileViewModel model = new ProfileViewModel()
+                {
+                    Email=user.Email,
+                    Name=user.Name,
+                    Surname=user.Surname,
+                    TCNumber=user.UserName
+                };
+                return View();
+
+            }
+            ModelState.AddModelError("", "Sisteme giriş yapmamız gerekmektedir");
+            return View();
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdatePassword(ProfileViewModel model)
+        {
+            try
+            {
+                //Mevcut logino lmuş kişinin Id isini veriyor. o id ile manager kişiyi db'den bulup 
+                var user = myUserManager.FindById(HttpContext.User.Identity.GetUserId());
+
+                //Ya eski şifresi ile yeni şifresi aynı aynıysa
+                if (true)
+                {
+
+                }
+                //Yeni şifre ile mevcut tekrarı uyuşuyor mu?
+
+                if (model.NewPassword!= model.ConfirmPassword)
+                {
+                    ModelState.AddModelError("", "Şifreler uyuşmuyor");
+                    return View(model);
+                }
+                
+
+                //Acana mevcut şifresini doğru yazdı mı?
+                var checkCurrent = myUserManager.Find(user.UserName, model.Password);
+
+            }
+            catch (Exception ex)
+            {
+
+                //ex loglanacak
+
+                ModelState.AddModelError("", "Beklenmedik hata oldu! Tekrar deneyiniz");
+            }
+        }
+
     }
 } 
