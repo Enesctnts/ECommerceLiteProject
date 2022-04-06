@@ -64,6 +64,9 @@ namespace ECommerceLiteUI.Controllers
                     return View(model);
                 }
 
+                //aktivasyon kodu üretelim
+
+                var activationCode = Guid.NewGuid().ToString().Replace("-", "");
 
                 //Artık sisteme kayıt olabilir..
                 var newUser = new ApplicationUser()
@@ -71,12 +74,11 @@ namespace ECommerceLiteUI.Controllers
                     Name = model.Name,
                     Surname = model.Surname,
                     Email = model.Email,
-                    UserName = model.TCNumber
+                    UserName = model.TCNumber,
+                    ActivationCode = activationCode
                 };
 
-                //aktivasyon kodu üretelim
-
-                var activationCode = Guid.NewGuid().ToString().Replace("-", "");
+                
                 //artık ekleyelim
 
                 var createResult = myUserManager.CreateAsync(newUser, model.Password);
@@ -129,15 +131,61 @@ namespace ECommerceLiteUI.Controllers
 
 
 
-
-
             }
             catch (Exception)
             {
-
-                throw;
+                //To Do Loglama yapılacak
+                ModelState.AddModelError("", "Beklenmedik bir hata oluştu! Tekrar Deneyiniz!");
+                return View(model);
             }
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult> Activation(string code)
+        {
+            try
+            {
+                var user = myUserStore.Context.Set<ApplicationUser>().FirstOrDefault(x => x.ActivationCode == code);
+                if (user==null)
+                {
+                    ViewBag.ActivationResult = "Activation işlemi başarısız! Sistem yöneticisinden yeniden email isteyiniz..";
+                }
+                //user bulundu!
+                if (user.EmailConfirmed)//zaten aktifleşmiş mi?
+                {
+                    ViewBag.ActivationResult = "Aktivasyon işleminiz zaten gerçekleşmiştir! Giriş yaparak sistemi kullanabilirsiniz";
+                    return View();
+                }
+                user.EmailConfirmed = true;
+                await myUserStore.UpdateAsync(user);
+                await myUserStore.Context.SaveChangesAsync();
+                //Bu kişi artık aktif
+                PassiveUser passiveUser = myPassiveUserRepo.AsQueryable().FirstOrDefault(x => x.UserId == user.Id);
+                if (passiveUser != null)
+                {
+                    //To Do : 
+
+                    passiveUser.IsDeleted = true;
+                    myPassiveUserRepo.Update();
+                    Customer customer = new Customer()
+                    {
+                        UserId = user.Id,
+                        TCNumber = passiveUser.TCNumber,
+                        IsDeleted = false,
+                        LastActiveTime = DateTime.Now
+                    };
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                // To Do: Loglama yapılacak.
+                ModelState.AddModelError("", "Beklenmedik bir hata oluştu!");
+                return View();
+
+            }
+        }
     }
 } 
