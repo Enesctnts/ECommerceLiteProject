@@ -175,6 +175,20 @@ namespace ECommerceLiteUI.Controllers
                         IsDeleted = false,
                         LastActiveTime = DateTime.Now
                     };
+
+                    await myCustomerRepo.InsertAsync(customer);
+
+                    //Aspnet tablosuna da bu kiişinin customer oldugununu bildirmek gerek
+                    myUserManager.RemoveFromRole(user.Id, Roles.Passive.ToString());
+                    myUserManager.AddToRole(user.Id, Roles.Customer.ToString());
+
+                    //işlem bitti başarılı old. dair mesajı gönderelim.
+
+                    ViewBag.ActivationResult = $"Merhaba sayın{user.Name} {user.Surname}, aktifleştirme işleminiz başarılıdır! Giriş yapıp sistemi kullanabilirsiniz";
+                    return View();
+
+
+
                 }
 
 
