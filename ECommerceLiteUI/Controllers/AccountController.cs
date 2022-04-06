@@ -312,9 +312,11 @@ namespace ECommerceLiteUI.Controllers
                 var user = myUserManager.FindById(HttpContext.User.Identity.GetUserId());
 
                 //Ya eski şifresi ile yeni şifresi aynı aynıysa
-                if (true)
+                if (myUserManager.PasswordHasher.VerifyHashedPassword(user.PasswordHash,model.NewPassword)==PasswordVerificationResult.Success)
                 {
-
+                    //Bu kişi mevcut şifresinin aynısını yeni şifre olarak yutturmaya çalışıyor.
+                    ModelState.AddModelError("", "Yeni şifreniz mevcut şifrenizle aynı olmasın madem değiştirmek istedin!");
+                    return View(model);
                 }
                 //Yeni şifre ile mevcut tekrarı uyuşuyor mu?
 
@@ -327,6 +329,24 @@ namespace ECommerceLiteUI.Controllers
 
                 //Acana mevcut şifresini doğru yazdı mı?
                 var checkCurrent = myUserManager.Find(user.UserName, model.Password);
+                if (checkCurrent==null)
+                {
+                    //Mevcut şifresini yanlış yazmış
+                    ModelState.AddModelError("", "Mevcutşifrenizi yanlış girdiğiniz yeni şifre oluşturma işleminiz başarısız oldu! Tekrar deneyiniz");
+                    return View();
+                }
+
+                //Artık şifresini değiştirebilir.
+
+                await myUserStore.SetPasswordHashAsync(user, myUserManager.PasswordHasher.HashPassword(model.NewPassword));
+
+                await myUserManager.UpdateAsync(user);
+
+                //şifre değiştirdikten sonra sistemden atalım!
+                TempData["PasswordUpdated"] = "Paralonız değiştirildi";
+                HttpContext.GetOwinContext().Authentication.SignOut();
+                return RedirectToAction("Login", "Account", new { email = user.Email });
+
 
             }
             catch (Exception ex)
@@ -335,8 +355,66 @@ namespace ECommerceLiteUI.Controllers
                 //ex loglanacak
 
                 ModelState.AddModelError("", "Beklenmedik hata oldu! Tekrar deneyiniz");
+                return View(model);
             }
         }
+
+
+        [HttpGet]
+        public ActionResult RecoverPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> RecoverPassword(ProfileViewModel model)
+        {
+            try
+            {
+                //Şifresini unutmuş
+                //1.Yönteml
+                //var user = myUserStore.Context.Set<ApplicationUser>().FirstOrDefault(p => p.Email == model.Email);
+                //2.Yöntem
+                var user = myUserManager.FindByEmail(model.Email);
+
+                if (user==null)
+                {
+                    ViewBag.RecoverPassword = "Sistemde böyle bir kullanıcı olmadığı için size yeni bir şifre gönderemiyoruz! Lütfen önce sisteme kayıt olunuz.";
+                    return View(model);
+                }
+
+                //Random şifre oluştur!
+                var randomPassword = CreateRandomNewPassword();
+                await myUserStore.SetPasswordHashAsync(user, myUserManager.PasswordHasher.HashPassword(randomPassword));
+                await myUserStore.UpdateAsync(user);
+
+                //email gönderilecek
+                //Site adresini alıyoruz.
+                var siteUrl = Request.Url.Scheme + Uri.SchemeDelimiter + Request.Url.Host + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port);
+                await SiteSettings.SendMail(new MailModel()
+                {
+                    To = user.Email,
+                    Subject = "ECommerceLite Şifre Yenilendi",
+                    Message = $"Merhaba {user.Name} {user.Surname}," +
+                    $"<br/>Yeni şifreniz:{randomPassword} </b> Sisteme Giriş" +
+                    $"yapmak için <b>" + 
+                    $"<a href='{siteUrl}/Account/Activation?" +
+                    $"code{user.Email}'>Aktivasyon Linkine</a></b> tıklayınız..."
+                });
+
+                //işlemler bitti...
+                ViewBag.RecoverPassword = "Email adresinize şifre gönderilmiştir.";
+                return View();
+            }
+            catch (Exception ex)
+            {
+
+                //To Do ex loglanacak
+                ViewBag.RecoverPasswordResult = "Sistemsel bir hata oluştu! Tekrar deneyiniz!";
+                return View(model);
+            }
+        }
+
 
     }
 } 
