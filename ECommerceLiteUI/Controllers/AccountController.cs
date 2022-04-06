@@ -394,12 +394,12 @@ namespace ECommerceLiteUI.Controllers
                 await SiteSettings.SendMail(new MailModel()
                 {
                     To = user.Email,
-                    Subject = "ECommerceLite Şifre Yenilendi",
+                    Subject = "ECommerceLite - Şifre Yenilendi!",
                     Message = $"Merhaba {user.Name} {user.Surname}," +
-                    $"<br/>Yeni şifreniz:{randomPassword} </b> Sisteme Giriş" +
-                    $"yapmak için <b>" + 
-                    $"<a href='{siteUrl}/Account/Activation?" +
-                    $"code{user.Email}'>Aktivasyon Linkine</a></b> tıklayınız..."
+                    $"<br/>Yeni şifreniz:<b> {randomPassword} </b> Sisteme Giriş" +
+                    $"yapmak için <b>" +
+                    $"<a href='{siteURL}/Account/Login?" +
+                    $"email={user.Email}'>BURAYA</a></b> tıklayınız..."
                 });
 
                 //işlemler bitti...
