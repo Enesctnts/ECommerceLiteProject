@@ -427,7 +427,7 @@ namespace ECommerceLiteUI.Controllers
                     ReturnUrl=returnUrl,
                     Email=email
                 };
-
+                return View(model);
             }
             catch (Exception ex)
             {
@@ -460,12 +460,19 @@ namespace ECommerceLiteUI.Controllers
                 {
                     ViewBag.Result = "Sistemi kullanmak için aktivasyon yapmanız gerekmektedir! Emailinizi gönderilen aktivasyon linkini tıklayınız!";
                     //To Do: Zaman Kalırsa Email gönder adında küçük bir buton burada olsun 
-                    return View();
+                    return View(model);
                 }
                 //Artık login olabilir 
 
                 var authManager = HttpContext.GetOwinContext().Authentication;
                 var userIdentity = await myUserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+                
+                //Owin kullanıyoruz.. araştır
+                // 2.yol //AuthenticationProperties auth = new AuthenticationProperties();
+                //auth.IsPersistent = model.RememberMe;
+                //authManager.SignIn(auth, userIdentity);
+
+                //1.yol
                 authManager.SignIn( new AuthenticationProperties() { IsPersistent=model.RememberMe } , userIdentity );
 
 
@@ -517,4 +524,3 @@ namespace ECommerceLiteUI.Controllers
         }
     }
 } 
-.

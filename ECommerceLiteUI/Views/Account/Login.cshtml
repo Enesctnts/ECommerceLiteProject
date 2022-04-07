@@ -1,0 +1,51 @@
+﻿@using ECommerceLiteUI.Models
+@model LoginViewmodel
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<div class="row margin-vert-30">
+    @* Login Start *@
+    <div class="col-md-12">
+
+
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="login-header margen-bottom-30" align="center">
+                <h2 class="text-center">ECommerceLite 303'e HOŞGELDİNİZ!</h2>
+                <h2 class="text-center">Hemen Giriş Yapabilirsiniz</h2>
+            </div>
+            <br />
+            <div class="input group-margin-bottom-20">
+                <span class="input-group-addon">
+                    <i class="fa fa-user"></i>
+                </span>
+                @Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder = "Emailinizi giriniz.." })
+                @Html.ValidationMessageFor(x => x.Email)
+            </div>
+            
+            <br />
+            <div class="input group-margin-bottom-20">
+                <span class="input-group-addon">
+                    <i class="fa fa-lock"></i>
+                </span>
+                @Html.TextBoxFor(x => x.Password, new { @class = "form-control", placeholder = "Şifrenizi giriniz.." })
+                @Html.ValidationMessageFor(x => x.Password)
+            </div>
+        }
+
+
+
+
+    </div>
+    @* Login End *@
+
+
+
+
+
+</div>
+
