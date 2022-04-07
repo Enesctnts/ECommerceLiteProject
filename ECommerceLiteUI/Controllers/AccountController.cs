@@ -390,7 +390,7 @@ namespace ECommerceLiteUI.Controllers
 
                 //email gönderilecek
                 //Site adresini alıyoruz.
-                var siteUrl = Request.Url.Scheme + Uri.SchemeDelimiter + Request.Url.Host + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port);
+                var siteURL = Request.Url.Scheme + Uri.SchemeDelimiter + Request.Url.Host + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port);
                 await SiteSettings.SendMail(new MailModel()
                 {
                     To = user.Email,
