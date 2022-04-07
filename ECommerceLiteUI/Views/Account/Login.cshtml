@@ -35,7 +35,23 @@
                 @Html.TextBoxFor(x => x.Password, new { @class = "form-control", placeholder = "Şifrenizi giriniz.." })
                 @Html.ValidationMessageFor(x => x.Password)
             </div>
-        }
+            <br />
+            <div class="checkbox" id="rememberme" name="@Model.RememberMe">
+                <label for="rememberme">Beni Hatırla?</label>
+            </div>
+           
+            <div class="row">
+                <button type="submit" class="btn btn-default pull-right"> Giriş Yap</button>
+                <a href="Account/Register"class="btn btn-default pull-left">Kayıt Ol</a>  
+            </div>
+            <hr />
+            <h4 align="center">Şifrenizi mi unuttunuz?</h4>
+            <p align="center">
+                @Html.ActionLink("Yeni Şifre Talebi için BURAYA Tıklayınız","RecoverPassword","Account")
+            </p>
+
+
+            }
 
 
 
