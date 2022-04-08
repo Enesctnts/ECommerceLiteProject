@@ -442,7 +442,7 @@ namespace ECommerceLiteUI.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return View(model);
                 }
