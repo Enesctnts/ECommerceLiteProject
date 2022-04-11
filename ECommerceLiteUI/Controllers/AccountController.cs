@@ -75,7 +75,7 @@ namespace ECommerceLiteUI.Controllers
                     Name = model.Name,
                     Surname = model.Surname,
                     Email = model.Email,
-                    UserName = model.TCNumber,
+                    UserName = model.Email,
                     ActivationCode = activationCode
                 };
 
