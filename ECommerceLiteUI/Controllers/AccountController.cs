@@ -374,9 +374,8 @@ namespace ECommerceLiteUI.Controllers
             {
                 //Şifresini unutmuş
                 //1.Yönteml
-                //var user = myUserStore.Context.Set<ApplicationUser>().FirstOrDefault(p => p.Email == model.Email);
-                //2.Yöntem
-                var user = myUserManager.FindByEmail(model.Email);
+                var user = myUserStore.Context.Set<ApplicationUser>().FirstOrDefault(p => p.Email == model.Email);
+                
 
                 if (user==null)
                 {
