@@ -241,7 +241,7 @@ namespace ECommerceLiteUI.Controllers
                 var user = myUserManager.FindById(HttpContext.User.Identity.GetUserId());
                 if (user==null)
                 {
-                    ModelState.AddModelError("", "MEvcut kullanıcı bilgilerinize ulaşılamadıgı için işlem yapamıyoruz.");
+                    ModelState.AddModelError("", "Mevcut kullanıcı bilgilerinize ulaşılamadıgı için işlem yapamıyoruz.");
                     return View(model);
 
                 }
@@ -333,7 +333,7 @@ namespace ECommerceLiteUI.Controllers
                 if (checkCurrent==null)
                 {
                     //Mevcut şifresini yanlış yazmış
-                    ModelState.AddModelError("", "Mevcutşifrenizi yanlış girdiğiniz yeni şifre oluşturma işleminiz başarısız oldu! Tekrar deneyiniz");
+                    ModelState.AddModelError("", "Mevcut şifrenizi yanlış girdiğiniz yeni şifre oluşturma işleminiz başarısız oldu! Tekrar deneyiniz");
                     return View();
                 }
 
