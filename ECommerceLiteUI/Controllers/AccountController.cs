@@ -108,11 +108,11 @@ namespace ECommerceLiteUI.Controllers
                     await SiteSettings.SendMail(new MailModel()
                     {
                         To = newUser.Email,
-                        Subject = "ECommerceLite Site Aktivasyob Emaili",
+                        Subject = "ECommerceLite Site Aktivasyon Emaili ",
                         Message = $"Merhaba {newUser.Name} {newUser.Surname}," + 
                         $"<br/>Hesabınızı aktifleştirmek için <b>" +
                         $"<a href='{siteUrl}/Account/Activation?" +
-                        $"code{activationCode}'>Aktivasyon Linkine</a></b> tıklayınız..."
+                        $"code={activationCode}'>Aktivasyon Linkine</a></b> tıklayınız..."
                     });
 
                     //işlemler bitti...
@@ -185,7 +185,7 @@ namespace ECommerceLiteUI.Controllers
 
                     //işlem bitti başarılı old. dair mesajı gönderelim.
 
-                    ViewBag.ActivationResult = $"Merhaba sayın{user.Name} {user.Surname}, aktifleştirme işleminiz başarılıdır! Giriş yapıp sistemi kullanabilirsiniz";
+                    ViewBag.ActivationResult = $"Merhaba sayın {user.Name} {user.Surname}, aktifleştirme işleminiz başarılıdır! Giriş yapıp sistemi kullanabilirsiniz";
                     return View();
 
                 }
