@@ -35,6 +35,12 @@ namespace ECommerceLiteUI.Controllers
         [HttpGet]
         public ActionResult Register()
         {
+            if (MembershipTools.GetUser() != null)
+            {
+                //To Do: Kişinin gittiği URL'i tutup oraya geri dönderme nasıl yaparız.
+                return RedirectToAction("Index", "Home");
+            }
+            //Kayıt ol sayfası
             return View();
         }
 
@@ -219,7 +225,7 @@ namespace ECommerceLiteUI.Controllers
                     Name = user.Name,
                     Surname = user.Surname,
                     Email = user.Email,
-                    TCNumber = user.UserName
+                    
                 };
                 return View(model);
             }
@@ -264,7 +270,6 @@ namespace ECommerceLiteUI.Controllers
                 {
                     Name = user.Name,
                     Surname = user.Surname,
-                    TCNumber = user.UserName,
                     Email = user.Email
                 };
                 return View(updatedModel);
@@ -284,20 +289,6 @@ namespace ECommerceLiteUI.Controllers
         [Authorize]
         public ActionResult UpdatePassword()
         {
-            var user = myUserManager.FindById(HttpContext.User.Identity.GetUserId());
-            if (user!=null)
-            {
-                ProfileViewModel model = new ProfileViewModel()
-                {
-                    Email=user.Email,
-                    Name=user.Name,
-                    Surname=user.Surname,
-                    TCNumber=user.UserName
-                };
-                return View();
-
-            }
-            ModelState.AddModelError("", "Sisteme giriş yapmamız gerekmektedir");
             return View();
         }
 
@@ -305,7 +296,7 @@ namespace ECommerceLiteUI.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdatePassword(ProfileViewModel model)
+        public async Task<ActionResult> UpdatePassword(PasswordChangeViewModel model)
         {
             try
             {
