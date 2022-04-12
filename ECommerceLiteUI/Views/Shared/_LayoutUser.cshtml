@@ -48,7 +48,7 @@
             <div class="container">
                 <ul class="header-links pull-left">
                     <li><a href="#"><i class="fa fa-phone"></i> 0545 881 71 35</a></li>
-                    <li><a href="#"><i class="fa fa-envelope-o"></i> enesctnts@email.com</a></li>
+                    <li><a href="#"><i class="fa fa-envelope-o"></i> enesctnts@gmail.com</a></li>
                     <li><a href="#"><i class="fa fa-map-marker"></i> Kadıköy - İstanbul</a></li>
                 </ul>
                 <ul class="header-links pull-right">
@@ -56,10 +56,12 @@
                     <!-- Buraya partial gelicek -->
                     @if (MembershipTools.GetUser() != null)
                     {
+                        <li><a href="/Account/Logout"><i class="fa fa-sign-out"></i> @(MembershipTools.GetNameSurname())</a></li>
                         <li><a href="/Account/Logout"><i class="fa fa-sign-out"></i> ÇIKIŞ YAP</a></li>
                     }
                     else
                     {
+                        <li><a href="/Account/Register"><i class="fa fa-registered"></i> KAYIT OL</a></li>
                         <li><a href="/Account/Login"><i class="fa fa-sign-in"></i> GİRİŞ YAP</a></li>
                     }
 
