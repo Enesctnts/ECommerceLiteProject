@@ -2013,6 +2013,7 @@
     <Content Include="ElectroTheme\blank.html" />
     <Content Include="ElectroTheme\checkout.html" />
     <Content Include="ElectroTheme\css\bootstrap.min.css" />
+    <Content Include="ElectroTheme\css\Enes.css" />
     <Content Include="ElectroTheme\css\font-awesome.min.css" />
     <Content Include="ElectroTheme\css\nouislider.min.css" />
     <Content Include="ElectroTheme\css\slick-theme.css" />
