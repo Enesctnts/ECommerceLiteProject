@@ -12,7 +12,7 @@
     {
         <p>
             <b>Ürün Ad</b>: @Html.TextBox("Search")
-            <input type="submit" value="Ara" class="btn btn-info btn-sm" style="margin-left:5px"/>
+            <input type="submit" value="Ara" class="btn btn-info btn-sm" style="margin-left:5px" />
         </p>
     }
 
@@ -47,7 +47,9 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.ProductName</td>
+                            <td>
+                                <button class="btn btn-sm btn-info" onclick="ProductBtnClicked(@item.Id)" data-toggle="modal" data-target="#myModal">@item.ProductName </button>
+                            </td>
                             <td>@item.Description</td>
                             <td>@item.CategoryId</td>
                             <td>@item.RegisterDate</td>
@@ -70,3 +72,74 @@
     </div>
 
 </div>
+
+<!--Modal Başlangıcı-->
+
+
+<div class="modal fade col-md-12" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!--Modal Content Başlangıcı-->
+        <div class="modal-content">
+            <div class=" modal-header">
+                <h4 class=" modal-title">Ürün Detay</h4>
+                <button type="button" class=" close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body" id="form-modal">
+                @using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="col-md-12">
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-12">
+                        <input type="hidden" name="Id" id="ProductId" />
+                        <div class="form-group">
+                            @Html.Label("ürün Adı:")
+                            <input id="ProductName" name="ProductName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("ürün Açıklaması:")
+                            <input id="Description" name="Description" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("ürün Kodu:")
+                            <input id="ProductCode" name="ProductCode" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Stok:")
+                            <input id="Quantity" name="Quantity" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Fiyat:")
+                            <input id="Price" name="Price" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("İndirim(%):")
+                            <input id="Discount" name="Discount" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <input type="button" value="KAPAT" class="btn btn-danger" dismiss="modal" style="float:left" />
+                            <input type="button" value="GÜNCELLE" class="btn btn-info" style="float:right" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        
+        
+    <!--Modal Content Bitişi-->
+    </div>
+</div>
+
+<!--Modal Bitiş-->
+
+
+@section scripts
+{
+    <script>
+        function ProductBtnClicked(id) {
+            
+        }
+    </script>
+}
