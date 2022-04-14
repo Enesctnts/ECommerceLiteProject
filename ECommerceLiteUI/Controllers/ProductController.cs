@@ -2,6 +2,7 @@
 using ECommerceLiteBLL.Settings;
 using ECommerceLiteEntity.Models;
 using ECommerceLiteUI.Models;
+using Mapster;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -66,7 +67,7 @@ namespace ECommerceLiteUI.Controllers
                     return View(model);
 
                 }
-                if (model.CategoryId<=0 || model.CategoryId>myCategoryRepo.GetAll().Count())
+                if (model.CategoryId <= 0 || model.CategoryId > myCategoryRepo.GetAll().Count())
                 {
                     ModelState.AddModelError("", "Ürüne ait kategori seçilmelidir");
                     return View(model);
@@ -80,24 +81,32 @@ namespace ECommerceLiteUI.Controllers
                     ModelState.AddModelError("", "Dikkat! Girdiğiniz ürün kodu sistemdeki bir başka ürüne aittir.Ürün kodları benzersiz olmalıdır");
                     return View(model);
                 }
-                
+
                 //Ürün tabloya kayıt olacak
                 //To Do: Mapleme yapılacak
 
-                Product product = new Product()
-                {
-                    ProductName = model.ProductName,
-                    Description = model.Description,
-                    ProductCode = model.ProductCode,
-                    CategoryId = model.CategoryId,
-                    Discount = model.Discount,
-                    Quantity = model.Quantity,
-                    RegisterDate = DateTime.Now,
-                    Price = model.Price
-                };
+                //Product product = new Product()
+                //{
+                //    ProductName = model.ProductName,
+                //    Description = model.Description,
+                //    ProductCode = model.ProductCode,
+                //    CategoryId = model.CategoryId,
+                //    Discount = model.Discount,
+                //    Quantity = model.Quantity,
+                //    RegisterDate = DateTime.Now,
+                //    Price = model.Price
+                //};
+                //Mapleme yapıldı
+                //Mapster paketi indirildi.Mapster bir objedeki veriileri diger bir objeye zahmetsizce aktarır. Aktarım yapabilmesi için A objesiyle B objesinin içindeki propertylerin ismileri ve tipleri birebir aybı olamlıdır.
+                //Bu projede mapster kullandık Core projesinde daha profesyonel olan AutoMapper' ı kullancagız. Bir dto objesinin içerisindeli verileri dto objesinin içendeki propertyleri aktarır.
 
-                int insertResult = myProductRepo.Insert(product); 
-                if (insertResult>0)
+
+                Product product = model.Adapt<Product>();
+               //2.yol 
+               //Product product2 = model.Adapt<ProductViewModel, Product>();
+
+                int insertResult = myProductRepo.Insert(product);
+                if (insertResult > 0)
                 {
                     //Sıfırdan büyükse product tabloya eklendi
                     //Acaba bu producta resim seçilmiş mi? resim seçtiyse o resimlerin yollarını kayıt et
@@ -109,11 +118,11 @@ namespace ECommerceLiteUI.Controllers
                         int counter = 1; //Bizim sistemde resim adeti 5 olarak belirlendiği için
                         foreach (var item in model.Files)
                         {
-                            if (counter==5)
+                            if (counter == 5)
                             {
                                 break;
                             }
-                            if (item!=null && item.ContentType.Contains("image") && item.ContentLength>0)
+                            if (item != null && item.ContentType.Contains("image") && item.ContentLength > 0)
                             {
                                 string filename = SiteSettings.StringCharacterConverter(model.ProductName).ToLower().Replace("-", "");
                                 string extensionName = Path.GetExtension(item.FileName);
@@ -145,10 +154,10 @@ namespace ECommerceLiteUI.Controllers
                             }
                             counter++;
                         }
-                        
-                        
+
+
                         int productPictureInsertResult = myProductPictureRepo.Insert(productPicture);
-                        if (productPictureInsertResult>0)
+                        if (productPictureInsertResult > 0)
                         {
                             return RedirectToAction("ProductList", "Product");
                         }
@@ -157,14 +166,14 @@ namespace ECommerceLiteUI.Controllers
                             ModelState.AddModelError("", "Ürün eklendi ama ürüne ait fotoğraflar eklenirken beklenmedik bir hata oluştu! Ürününüzün fotoğrafını daha sonra tekrar eklemeyi deneyebilirsiniz.");
                             return View(model);
                         }
-                    
+
                     }
 
                     else
                     {
                         return RedirectToAction("ProductList", "Product");
                     }
-                
+
                 }
                 else
                 {
