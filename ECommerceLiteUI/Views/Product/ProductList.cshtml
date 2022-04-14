@@ -1,14 +1,21 @@
-﻿
+﻿@using ECommerceLiteEntity.Models
+@model List<Product>
 @{
     ViewBag.Title = "ProductList";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>Ürünler</h2>
+<h2>Sistemdeki Ürünler</h2>
 <br />
 <div class="col-12">
+    @using (Html.BeginForm("Productlist", "Product", FormMethod.Get))
+    {
+        <p>
+            <b>Ürün Ad</b>: @Html.TextBox("Search")
+            <input type="submit" value="Ara" class="btn btn-info btn-sm" style="margin-left:5px"/>
+        </p>
+    }
 
-    Buraya arama textbox'ı gelicek
 </div>
 
 <div class="col-12">
@@ -20,5 +27,46 @@
                 Yeni Ürün Ekle
             </a>
         </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Ürün Adı</th>
+                        <th>Ürün Açıklaması</th>
+                        <th>Kategorisi</th>
+                        <th>Kayıt Tarihi</th>
+                        <th>Fiyatı</th>
+                        <th>İndirim (%)</th>
+                        <th>Stok</th>
+                        <th>İşlemler</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@item.Description</td>
+                            <td>@item.CategoryId</td>
+                            <td>@item.RegisterDate</td>
+                            <td>@item.Price</td>
+                            <td>@item.Discount</td>
+                            <td>@item.Quantity</td>
+
+                            <td>
+                                @*buraya sil düzenle ürününün resmine git gibi butonlar gelir*@
+                                <a href="/Product/Delete" class="btn btn-sm btn-danger" style="margin-left:5px">Sil</a>
+                                <a href="/Product/ProductPicrures" class="btn btn-sm btn-primary" style="margin-left:5px">Resimler</a>
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
     </div>
+
 </div>
