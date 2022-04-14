@@ -71,6 +71,16 @@ namespace ECommerceLiteUI.Controllers
                     ModelState.AddModelError("", "Ürüne ait kategori seçilmelidir");
                     return View(model);
                 }
+
+                //Burada kontrol lazım
+                //Acaba girdiği ürün kodu bizim db de var mı?
+
+                if (myProductRepo.IsSameProductCode(model.ProductCode))
+                {
+                    ModelState.AddModelError("", "Dikkat! Girdiğiniz ürün kodu sistemdeki bir başka ürüne aittir.Ürün kodları benzersiz olmalıdır");
+                    return View(model);
+                }
+                
                 //Ürün tabloya kayıt olacak
                 //To Do: Mapleme yapılacak
 
