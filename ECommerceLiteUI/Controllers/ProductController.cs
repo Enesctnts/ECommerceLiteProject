@@ -29,7 +29,7 @@ namespace ECommerceLiteUI.Controllers
             }
             else
             {
-                allProducts=myProductRepo.GetAll().Where(x=>x.ProductName.Contains(Search) || x.Description.Contains(Search)).ToList();
+                allProducts=myProductRepo.GetAll().Where(x=>x.ProductName.ToLower().Contains(Search.ToLower()) || x.Description.ToLower().Contains(Search.ToLower())).ToList();
             }
             return View(allProducts);
         }
