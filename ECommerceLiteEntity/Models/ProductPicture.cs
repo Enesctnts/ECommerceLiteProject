@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ECommerceLiteEntity.Models
 {
-    [Table("Tables")]
+    [Table("ProductPictures")]
     public class ProductPicture:Base<int>
     {
         public int ProductId { get; set; } // ProductPicture tablosu Product tablosuyla ilişkilidir. ProductId yi o yüzden yazıyoz sonra  [ForeignKey("ProductId")] ve  public virtual Product Product { get; set; }
