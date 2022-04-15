@@ -18,7 +18,9 @@ namespace ECommerceLiteUI.Controllers
         CategoryRepo myCategoryRepo = new CategoryRepo();
         ProductRepo myProductRepo = new ProductRepo();
         ProductPictureRepo myProductPictureRepo = new ProductPictureRepo();
-        public ActionResult ProductList(string Search = "")
+        private const int pageSize = 5;
+        
+        public ActionResult ProductList(int? page=1 , string Search = "")
         {
             //Alt kategorileri repo aracılığıyla dbden çektik
             ViewBag.SubCategories = myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId != null).ToList();
@@ -32,6 +34,22 @@ namespace ECommerceLiteUI.Controllers
             {
                 allProducts=myProductRepo.GetAll().Where(x=>x.ProductName.ToLower().Contains(Search.ToLower()) || x.Description.ToLower().Contains(Search.ToLower())).ToList();
             }
+
+            //Paging--> 1.yöntem En klasik yöntemdir.
+            allProducts = allProducts.Skip(
+                (page.Value < 1 ? 1 : page.Value - 1) 
+                * 
+                pageSize).Take(pageSize)//10Tane al neden 10? çünkü yukarudaki PageSize 10'a eşitlenmiiş
+                .ToList();
+
+            //Sayfaya bazı bilgiler göndereceğiz
+
+            var totalProduct = myProductRepo.GetAll().Count;//toplam ürün sayısı
+            ViewBag.TotalProduct = totalProduct;// toplam ürün sayısını sayfaya göndereceğiz
+            ViewBag.TotalPages = (int)Math.Ceiling(totalProduct / (double)pageSize); //Toplam ürün / sayfada gösterilecek üründen kaç sayfa oldugu bilgisi
+            ViewBag.PageSize = pageSize;//Her sayfa kaç ürün gözükecek bilgisini html sayfasına gönderelim
+            ViewBag.CurrentPage = page;//View'de kaçıncı sayfada olduğum bilgisini tutsun
+
             return View(allProducts);
         }
 
