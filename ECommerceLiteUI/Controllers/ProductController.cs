@@ -20,7 +20,8 @@ namespace ECommerceLiteUI.Controllers
         ProductPictureRepo myProductPictureRepo = new ProductPictureRepo();
         public ActionResult ProductList(string Search = "")
         {
-
+            //Alt kategorileri repo aracılığıyla dbden çektik
+            ViewBag.SubCategories = myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId != null).ToList();
             List<Product> allProducts = new List<Product>();
             
             if (string.IsNullOrEmpty(Search))
@@ -200,5 +201,85 @@ namespace ECommerceLiteUI.Controllers
                 return View(model);
             }
         }
+   
+        public JsonResult GetProductDetails(int id)
+        {
+            try
+            {
+                var product = myProductRepo.GetById(id);
+                if (product!=null)
+                {
+                    //var data = product.Adapt<ProductViewModel>();
+                    var data = new ProductViewModel()
+                    {
+                        ProductName = product.ProductName,
+                        Description = product.Description,
+                        ProductCode = product.ProductCode,
+                        CategoryId = product.CategoryId,
+                        Discount = product.Discount,
+                        Quantity = product.Quantity,
+                        RegisterDate = DateTime.Now,
+                        Price = product.Price,
+                        Id=product.Id
+                    };
+                    return Json(new { isSuccess = true, data },JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+                    return Json(new { isSuccess = false});
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { isSuccess = false });
+            }
+        }
+    
+        public ActionResult Edit(ProductViewModel model)
+        {
+            try
+            {
+                var product = myProductRepo.GetById(model.Id);
+                if (product!=null)
+                {
+                    product.ProductName = model.ProductName;
+                    product.Description = model.Description;
+                    product.Discount = model.Discount;
+                    product.Quantity = model.Quantity;
+                    product.ProductCode = model.ProductCode;
+                    product.Price = model.Price;
+                    product.CategoryId = model.CategoryId;
+
+                    int updateResult = myProductRepo.Update();
+                    if (updateResult>0)
+                    {
+                        TempData["EditSuccess"] = "Bilgiler başarıyla güncellenmiştir";
+                        return RedirectToAction("ProductList", "Product");
+                    }
+                    else
+                    {
+                        TempData["EditFailed"] = "Beklenmedik bir hata oluştuğu için ürün bilgileri sisteme aktarılmadı";
+                        return RedirectToAction("ProductList", "Product");
+                    }
+                      
+                }
+                else
+                {
+                    TempData["EditFailed"] = "Ürün bulunamadığı için bilgiler güncellenemedi";
+                    return RedirectToAction("ProductList", "Product");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //ex loglanacak
+                TempData["EditFailed"] = "Beklenmedik bir hata nedeniyle ürün bilgileri güncellenemedi!";
+                return RedirectToAction("ProductList", "Product");
+            }
+        }
+
+
+    
     }
 }
