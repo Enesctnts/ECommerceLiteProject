@@ -96,25 +96,25 @@ namespace ECommerceLiteUI.Controllers
                 //Ürün tabloya kayıt olacak
                 //To Do: Mapleme yapılacak
 
-                //Product product = new Product()
-                //{
-                //    ProductName = model.ProductName,
-                //    Description = model.Description,
-                //    ProductCode = model.ProductCode,
-                //    CategoryId = model.CategoryId,
-                //    Discount = model.Discount,
-                //    Quantity = model.Quantity,
-                //    RegisterDate = DateTime.Now,
-                //    Price = model.Price
-                //};
+                Product product = new Product()
+                {
+                    ProductName = model.ProductName,
+                    Description = model.Description,
+                    ProductCode = model.ProductCode,
+                    CategoryId = model.CategoryId,
+                    Discount = model.Discount,
+                    Quantity = model.Quantity,
+                    RegisterDate = DateTime.Now,
+                    Price = model.Price
+                };
                 //Mapleme yapıldı
                 //Mapster paketi indirildi.Mapster bir objedeki veriileri diger bir objeye zahmetsizce aktarır. Aktarım yapabilmesi için A objesiyle B objesinin içindeki propertylerin ismileri ve tipleri birebir aybı olamlıdır.
                 //Bu projede mapster kullandık Core projesinde daha profesyonel olan AutoMapper' ı kullancagız. Bir dto objesinin içerisindeli verileri dto objesinin içendeki propertyleri aktarır.
 
 
-                Product product = model.Adapt<Product>();
-               //2.yol 
-               //Product product2 = model.Adapt<ProductViewModel, Product>();
+                //Product product = model.Adapt<Product>();
+                //2.yol 
+                //Product product2 = model.Adapt<ProductViewModel, Product>();
 
                 int insertResult = myProductRepo.Insert(product);
                 if (insertResult > 0)
