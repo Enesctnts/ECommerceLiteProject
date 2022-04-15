@@ -165,7 +165,7 @@ namespace ECommerceLiteUI.Controllers
                 {
                     //Sıfırdan büyükse product tabloya eklendi
                     //Acaba bu producta resim seçilmiş mi? resim seçtiyse o resimlerin yollarını kayıt et
-                    if (model.Files.Any() )
+                    if (model.Files.Any() && model.Files[0] != null )
                     {
                         ProductPicture productPicture = new ProductPicture();
                         productPicture.ProductId = product.Id;
