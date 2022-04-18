@@ -32,6 +32,7 @@ namespace ECommerceLiteEntity.IdentityModels
 
         //ToDo: Guid 'in kaç haneli oldugunu bakıp buraya string ile length ile attribute tanımlanacaktır.
         public string ActivationCode { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         public virtual List<Admin> AdminList { get; set; }
         public virtual List<Customer> CustomerList { get; set; }
