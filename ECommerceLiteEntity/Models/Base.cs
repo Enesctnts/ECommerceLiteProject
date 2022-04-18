@@ -19,5 +19,6 @@ namespace ECommerceLiteEntity.Models
         [Required] // Girmek zorunlu olsun
         [Column(Order = 2)]//Kaçıncı Sırada olsun diye yaptık
         public DateTime RegisterDate { get; set; } = DateTime.Now;
+        public bool IsDeleted { get; set; } = false;
     }
 }
