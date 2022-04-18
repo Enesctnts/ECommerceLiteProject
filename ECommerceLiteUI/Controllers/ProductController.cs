@@ -167,65 +167,66 @@ namespace ECommerceLiteUI.Controllers
                     //Acaba bu producta resim seçilmiş mi? resim seçtiyse o resimlerin yollarını kayıt et
                     if (model.Files.Any() && model.Files[0] != null )
                     {
-                        ProductPicture productPicture = new ProductPicture();
-                        productPicture.ProductId = product.Id;
-                        productPicture.RegisterDate = DateTime.Now;
-                        int counter = 1; //Bizim sistemde resim adeti 5 olarak belirlendiği için
+                        int pictureinsertResult = 0;
                         foreach (var item in model.Files)
                         {
-                            if (counter == 5)
-                            {
-                                break;
-                            }
+                           
                             if (item != null && item.ContentType.Contains("image") && item.ContentLength > 0)
                             {
-                                string filename = SiteSettings.StringCharacterConverter(model.ProductName).ToLower().Replace("-", "");
+                                string productName = SiteSettings.StringCharacterConverter(model.ProductName).ToLower().Replace("-", "");
                                 string extensionName = Path.GetExtension(item.FileName);
+                                string directoryPath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}");
                                 string guid = Guid.NewGuid().ToString().Replace("-", "");
-                                string directoryPath = Server.MapPath($"~/ProductPictures/{filename}/{model.ProductCode}");
+                                
 
-                                string filePath = Server.MapPath($"~/ProductPictures/{filename}/{model.ProductCode}/") + filename + "-" + counter + "-" + guid + extensionName;
+                                string filePath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}/" + $"{productName}--{guid} + {extensionName}");
                                 if (!Directory.Exists(directoryPath))
                                 {
                                     Directory.CreateDirectory(directoryPath);
                                 }
-
+                                //resmi o klasöre kayıt edelim
                                 item.SaveAs(filePath);
-                                //To Do Buraya birisi çeki düzen versin
-                                if (counter == 1)
+                                //İşlem bitti DB'ye kayıt olacak
+                                ProductPicture picture = new ProductPicture()
                                 {
-                                    productPicture.ProductPicture1 = $"ProductPictures/{filename}/{model.ProductCode}/" + filename + "-" + counter + "-" + guid + extensionName;
-                                }
-                                if (counter == 2)
-                                {
-                                    productPicture.ProductPicture2 = $"ProductPictures/{filename}/{model.ProductCode}/" + filename + "-" + counter + "-" + guid + extensionName;
-                                }
-                                if (counter == 3)
-                                {
-                                    productPicture.ProductPicture3 = $"ProductPictures/{filename}/{model.ProductCode}/" + filename + "-" + counter + "-" + guid + extensionName;
-                                }
-
+                                    ProductId = product.Id,
+                                    RegisterDate = DateTime.Now,
+                                    Picture = $"/ProductPictures/{productName}/{model.ProductCode}/" + $"{productName}--{guid} + {extensionName}",
+                                    IsDeleted = false
+                                };
+                                 pictureinsertResult = myProductPictureRepo.Insert(picture);
+                                
 
                             }
-                            counter++;
+                           
                         }
 
+                        //pictureinsertResult kontrol edilecektir
 
-                        int productPictureInsertResult = myProductPictureRepo.Insert(productPicture);
-                        if (productPictureInsertResult > 0)
+                        if (insertResult>0 && model.Files.Count==insertResult)
                         {
+                            //Bütün ersimler ekelendiyse
+                            TempData["ProductInsertSuccess"] = "Yeni ürün eklendi";
+                            return RedirectToAction("ProductList", "Product");
+                        }
+                        else if (insertResult > 0 && model.Files.Count != insertResult)
+                        {
+                            //eksik eklemiş
+                            TempData["ProductInsertWarning"] = "Yeni ürün eklendi ama resimlerden bazıları beklenmedik bir sorun yüzünden eklenemedi! Eklenilemeyen resimleri daha sonra tekrar ekleyiniz";
                             return RedirectToAction("ProductList", "Product");
                         }
                         else
                         {
-                            ModelState.AddModelError("", "Ürün eklendi ama ürüne ait fotoğraflar eklenirken beklenmedik bir hata oluştu! Ürününüzün fotoğrafını daha sonra tekrar eklemeyi deneyebilirsiniz.");
-                            return View(model);
+                            //Ürünü ekledi ama resim eklenmedi
+                            TempData["ProductInsertWarning"]= "Ürün eklendi ama ürüne ait resimler eklenemedi.Resimler daha sonra tekrar eklemeyi deneyiniz.";
+                            return RedirectToAction("ProductList", "Product");
                         }
 
                     }
 
                     else
                     {
+                        TempData["ProductInsertSuccess"] = "Yeni ürün eklenmiştir";
                         return RedirectToAction("ProductList", "Product");
                     }
 
@@ -235,6 +236,7 @@ namespace ECommerceLiteUI.Controllers
                     ModelState.AddModelError("", "HATA: Ürün ekleme işleminde bir hata oluştu! Tekrar deneyiniz!");
                     return View(model);
                 }
+
 
             }
             catch (Exception ex)
