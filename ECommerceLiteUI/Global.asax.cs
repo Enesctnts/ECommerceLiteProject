@@ -36,7 +36,9 @@ namespace ECommerceLiteUI
                     //Adım5: Rolü ekle!
                     myRoleManager.Create(new ApplicationRole()
                     {
-                        Name = item
+                        Name = item,
+                        IsDeleted = false
+
                     });
                 }
             }
