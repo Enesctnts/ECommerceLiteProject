@@ -41,7 +41,7 @@
                 <span class="input-group-addon">
                     <i class="fa fa-lock"></i>
                 </span>
-                @Html.TextBoxFor(x => x.Password, new { @class = "form-control", placeholder = "Şifrenizi giriniz.." })
+                @Html.TextBoxFor(x => x.Password, new { @class = "form-control", placeholder = "Şifrenizi giriniz.." , type="password"})
                 @Html.ValidationMessageFor(x => x.Password)
             </div>
             <br />
