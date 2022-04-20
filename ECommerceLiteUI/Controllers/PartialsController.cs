@@ -1,4 +1,5 @@
 ﻿using ECommerceLiteBLL.Repository;
+using ECommerceLiteUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,20 @@ namespace ECommerceLiteUI.Controllers
             return PartialView("_PartialAdminSideBarProduct");
         }
 
+        public PartialViewResult ShoppingCart()
+        {
+            var shoppingCart=Session["ShoppingCart"] as List<ProductViewModel>;
+
+            if (shoppingCart==null)
+            {
+                return PartialView("_PartialShoppingCart", new List<ProductViewModel>());
+            }
+            else
+            {
+                return PartialView("_PartialShoppingCart", shoppingCart);      
+            }
+
+        }
         
     }
 }
