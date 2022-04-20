@@ -68,24 +68,25 @@ namespace ECommerceLiteUI.Models
                 //Örn: Elek--> Akıllı Tel--> applegiller-->
                 if (Category.BaseCategoryId!=null && Category.BaseCategoryId>0)
                 {
+
                     Category.CategoryList = new List<Category>();
                     Category.BaseCategory = myCategoryRepo.GetById(Category.BaseCategoryId.Value);
                     Category.CategoryList.Add(Category.BaseCategory);
 
-                    bool isOver = false;
-                    Category baseCategory = Category.BaseCategory;
-                    while (!isOver)
-                    {
-                        if (baseCategory.BaseCategoryId> 0)
-                        {
-                            Category.CategoryList.Add(myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value));
-                            baseCategory = myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value);
-                        }
-                        else
-                        {
-                            isOver = true;
-                        }
-                    }
+                    //bool isOver = false;
+                    //Category baseCategory = Category.BaseCategory;
+                    //while (!isOver)
+                    //{
+                    //    if (baseCategory.BaseCategoryId> 0)
+                    //    {
+                    //        Category.CategoryList.Add(myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value));
+                    //        baseCategory = myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value);
+                    //    }
+                    //    else
+                    //    {
+                    //        isOver = true;
+                    //    }
+                    //}
 
                     Category.CategoryList = Category.CategoryList.OrderBy(x => x.Id).ToList();//sıralama yaparak getiriyor. belki sıralıdır ama biz işimizi garantiye alıyoruz.
                 }
