@@ -175,12 +175,12 @@ namespace ECommerceLiteUI.Controllers
                             if (item != null && item.ContentType.Contains("image") && item.ContentLength > 0)
                             {
                                 string productName = SiteSettings.StringCharacterConverter(model.ProductName).ToLower().Replace("-", "");
-                                string extensionName = Path.GetExtension(item.FileName);
+                                string extensionName = ".jpg";
                                 string directoryPath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}");
                                 string guid = Guid.NewGuid().ToString().Replace("-", "");
                                 
 
-                                string filePath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}/" + $"{productName}--{guid} + {extensionName}");
+                                string filePath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}/" + $"{productName}-{guid}{extensionName}");
                                 if (!Directory.Exists(directoryPath))
                                 {
                                     Directory.CreateDirectory(directoryPath);
@@ -192,7 +192,7 @@ namespace ECommerceLiteUI.Controllers
                                 {
                                     ProductId = product.Id,
                                     RegisterDate = DateTime.Now,
-                                    Picture = $"/ProductPictures/{productName}/{model.ProductCode}/" + $"{productName}--{guid} + {extensionName}",
+                                    Picture = $"/ProductPictures/{productName}/{model.ProductCode}/" + $"{productName}-{guid}{extensionName}",
                                     IsDeleted = false
                                 };
                                  pictureinsertResult += myProductPictureRepo.Insert(picture);
