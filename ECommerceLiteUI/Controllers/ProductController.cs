@@ -139,7 +139,7 @@ namespace ECommerceLiteUI.Controllers
                 }
 
                 //Ürün tabloya kayıt olacak
-                //To Do: Mapleme yapılacak
+                //To Do: Mapleme yapılacak  
 
                 Product product = new Product()
                 {
@@ -164,23 +164,27 @@ namespace ECommerceLiteUI.Controllers
                 int insertResult = myProductRepo.Insert(product);
                 if (insertResult > 0)
                 {
-                    //Sıfırdan büyükse product tabloya eklendi
-                    //Acaba bu producta resim seçilmiş mi? resim seçtiyse o resimlerin yollarını kayıt et
-                    if (model.Files.Any() && model.Files[0] != null )
+                    // Sıfırdan büyükse product tabloya eklendi
+                    // Acaba bu producta resim seçmiş mi? resim seçtiyse o
+                    // resimlerin yollarını kayıt et
+                    if (model.Files.Any() && model.Files[0] != null)
                     {
                         int pictureinsertResult = 0;
                         foreach (var item in model.Files)
                         {
-                           
-                            if (item != null && item.ContentType.Contains("image") && item.ContentLength > 0)
+                            if (item != null && item.ContentType.Contains("image")
+                                && item.ContentLength > 0)
                             {
                                 string productName = SiteSettings.StringCharacterConverter(model.ProductName).ToLower().Replace("-", "");
-                                string extensionName = ".jpg";
-                                string directoryPath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}");
+                                string extensionName = Path.GetExtension(item.FileName);
+                                //Klasör adresi : ProductPictures/iphone13/20202020
+                                string directoryPath = Server.MapPath
+                                    ($"~/ProductPictures/{productName}/{model.ProductCode}");
                                 string guid = Guid.NewGuid().ToString().Replace("-", "");
-                                
-
-                                string filePath = Server.MapPath($"~/ProductPictures/{productName}/{model.ProductCode}/" + $"{productName}-{guid}{extensionName}");
+                                //ProductPictures/iphone13/20202020/iphone13-guid.jpg
+                                string filePath = Server.MapPath
+                                    ($"~/ProductPictures/{productName}/{model.ProductCode}/" +
+                                    $"{productName}-{guid}{extensionName}");
                                 if (!Directory.Exists(directoryPath))
                                 {
                                     Directory.CreateDirectory(directoryPath);
@@ -192,14 +196,13 @@ namespace ECommerceLiteUI.Controllers
                                 {
                                     ProductId = product.Id,
                                     RegisterDate = DateTime.Now,
-                                    Picture = $"/ProductPictures/{productName}/{model.ProductCode}/" + $"{productName}-{guid}{extensionName}",
+                                    Picture = $"/ProductPictures/{productName}/{model.ProductCode}/" +
+                                    $"{productName}-{guid}{extensionName}",
                                     IsDeleted = false
                                 };
-                                 pictureinsertResult += myProductPictureRepo.Insert(picture);
-                                
-
+                                pictureinsertResult += myProductPictureRepo.Insert(picture);
                             }
-                           
+
                         }
 
                         //pictureinsertResult kontrol edilecektir
