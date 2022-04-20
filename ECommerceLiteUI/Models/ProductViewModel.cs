@@ -44,9 +44,9 @@ namespace ECommerceLiteUI.Models
         //her ürünün bir kategorisi olur. İlişki kurduk
         public int CategoryId { get; set; }
 
-        public Category Category { get; set; }
+        public Category CategoryOfProduct { get; set; }
 
-        public List<ProductPicture> ProductPictureList { get; set; } = new List<ProductPicture>();
+        public List<ProductPicture> PicturesOfProduct { get; set; } = new List<ProductPicture>();
         //Ürün eklenirken ürüne ait resimler seçilebilir. Seçilen resimleri hafızada tutacak property
         public List<HttpPostedFileBase> Files { get; set; } = new List<HttpPostedFileBase>();
 
@@ -54,44 +54,57 @@ namespace ECommerceLiteUI.Models
         {
             if (Id>0)
             {
-                ProductPictureList = myProductPictureRepo.AsQueryable().Where(x => x.Id == Id).ToList();
+                PicturesOfProduct = myProductPictureRepo.AsQueryable().Where(x => x.Id == Id).ToList();
             }
         }
-        public  void GetCategory()
+
+        public void GetCategory()
         {
-            if (CategoryId>0)
+            if (CategoryId > 0)
             {
-                //ÖRN: Elektronik kat. --> Akıllı Telefon kat. --> ürün(Iphone 13 pro )
-                Category = myCategoryRepo.GetById(CategoryId);
-                //Akkıllı telefon kat artık elimde!
-                //Akıllı telefon kat. ir üst kategoisi var mı?
-                //Örn: Elek--> Akıllı Tel--> applegiller-->
-                if (Category.BaseCategoryId!=null && Category.BaseCategoryId>0)
+                //ÖRN: Elektronik kat.--> Akıllı Telefon kat. --> ürün(iphone 13 pro max)
+                CategoryOfProduct = myCategoryRepo.GetById(CategoryId);
+                CategoryOfProduct.CategoryList = new List<Category>();
+                // Akıllı telefon kat artık elimde!
+                // Akıllı telefon kat. bir üst kategorisi var mı?
+                // ÖRN: Elek--> Akkıl tel --> applegiller
+                if (CategoryOfProduct.BaseCategoryId != null
+                    && CategoryOfProduct.BaseCategoryId > 0)
                 {
+                    CategoryOfProduct.BaseCategory = myCategoryRepo.GetById
+                        (CategoryOfProduct.BaseCategoryId.Value);
+                    CategoryOfProduct.CategoryList.Add(CategoryOfProduct.BaseCategory);
 
-                    Category.CategoryList = new List<Category>();
-                    Category.BaseCategory = myCategoryRepo.GetById(Category.BaseCategoryId.Value);
-                    Category.CategoryList.Add(Category.BaseCategory);
+                    bool isOver = false;
+                    Category currentBaseCategory = CategoryOfProduct.BaseCategory;
+                    while (!isOver)
+                    {
+                        if (currentBaseCategory.BaseCategoryId != null
+                            && currentBaseCategory.BaseCategoryId > 0)
+                        {
+                            // mevcuttaki ana kategorinin üst kategorisi varmış
+                            // onu alalım
+                            currentBaseCategory = myCategoryRepo.GetById(currentBaseCategory.BaseCategoryId.Value);
+                            CategoryOfProduct.CategoryList.Add(currentBaseCategory);
+                        }
+                        else
+                        {
+                            isOver = true;
+                        }
+                    }
 
-                    //bool isOver = false;
-                    //Category baseCategory = Category.BaseCategory;
-                    //while (!isOver)
-                    //{
-                    //    if (baseCategory.BaseCategoryId> 0)
-                    //    {
-                    //        Category.CategoryList.Add(myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value));
-                    //        baseCategory = myCategoryRepo.GetById(baseCategory.BaseCategoryId.Value);
-                    //    }
-                    //    else
-                    //    {
-                    //        isOver = true;
-                    //    }
-                    //}
 
-                    Category.CategoryList = Category.CategoryList.OrderBy(x => x.Id).ToList();//sıralama yaparak getiriyor. belki sıralıdır ama biz işimizi garantiye alıyoruz.
+
+
+
+                    CategoryOfProduct.CategoryList =
+                        CategoryOfProduct.CategoryList.OrderBy(x => x.Id).ToList();
+
+
                 }
             }
         }
 
     }
+        
 }
