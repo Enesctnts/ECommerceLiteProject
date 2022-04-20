@@ -16,7 +16,7 @@ namespace ECommerceLiteUI.Controllers
         public ActionResult Index()
         {
             //Ana kategorileri viewbag ile sayfaya gönderelim
-            var categoryList = myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId == null).Take(4).ToList();
+            var categoryList = myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId == null).Take(6).ToList();
 
             ViewBag.CategoryList = categoryList.OrderByDescending(x => x.Id).ToList();
 
