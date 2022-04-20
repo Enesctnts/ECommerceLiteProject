@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using ECommerceLiteBLL.Repository;
 using ECommerceLiteUI.Models;
+using Mapster;
 
 namespace ECommerceLiteUI.Controllers
 {
@@ -22,29 +23,40 @@ namespace ECommerceLiteUI.Controllers
             //ürünler 
             var productList = myProductRepo.AsQueryable().Where(x => x.IsDeleted == false && x.Quantity >= 1).Take(10).ToList();
             List<ProductViewModel> model = new List<ProductViewModel>();
-            foreach (var item in productList)
+
+            //Mapster ile mapledik
+            productList.ForEach(x =>
             {
+                var item = x.Adapt<ProductViewModel>();
+                item.GetCategory();
+                item.GetProductPicture();
+                model.Add(item);
+            });
 
-                //mapster 
-                //model.Add(item.Adapt<ProductViewModel>())
-                var product = new ProductViewModel()
-                {
-                    Id = item.Id,
-                    CategoryId = item.CategoryId,
-                    ProductName = item.ProductName,
-                    Description = item.Description,
-                    Quantity = item.Quantity,
-                    Discount = item.Discount,
-                    RegisterDate = item.RegisterDate,
-                    Price = item.Price,
-                    ProductCode = item.ProductCode
-                    //Isdeleted alanını viewmodel içine eklemeyi unuttuk.Çünkü isdeleted alanını daaha dün ekledik.Viewmodeli geçen hafta oluşturduk.
-                };
-                product.GetCategory();
-                product.GetProductPicture();
-                model.Add(product);
+            //2.yol
+            //foreach (var item in productList)
+            //{
 
-            }
+            //    //mapster 
+            //    //model.Add(item.Adapt<ProductViewModel>())
+            //    var product = new ProductViewModel()
+            //    {
+            //        Id = item.Id,
+            //        CategoryId = item.CategoryId,
+            //        ProductName = item.ProductName,
+            //        Description = item.Description,
+            //        Quantity = item.Quantity,
+            //        Discount = item.Discount,
+            //        RegisterDate = item.RegisterDate,
+            //        Price = item.Price,
+            //        ProductCode = item.ProductCode
+            //        //Isdeleted alanını viewmodel içine eklemeyi unuttuk.Çünkü isdeleted alanını daaha dün ekledik.Viewmodeli geçen hafta oluşturduk.
+            //    };
+            //    product.GetCategory();
+            //    product.GetProductPicture();
+            //    model.Add(product);
+
+            //}
 
             return View(model);
         }
