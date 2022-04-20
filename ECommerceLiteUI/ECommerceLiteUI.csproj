@@ -2031,6 +2031,7 @@
     <Content Include="ElectroTheme\img\103logo.png" />
     <Content Include="ElectroTheme\img\hotdeal.png" />
     <Content Include="ElectroTheme\img\logo.png" />
+    <Content Include="ElectroTheme\img\NoImage.png" />
     <Content Include="ElectroTheme\img\product01.png" />
     <Content Include="ElectroTheme\img\product02.png" />
     <Content Include="ElectroTheme\img\product03.png" />
