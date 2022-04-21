@@ -54,7 +54,7 @@ namespace ECommerceLiteUI.Models
         {
             if (Id>0)
             {
-                PicturesOfProduct = myProductPictureRepo.AsQueryable().Where(x => x.Id == Id).ToList();
+                PicturesOfProduct = myProductPictureRepo.AsQueryable().Where(x => x.ProductId == Id).ToList();
             }
         }
 

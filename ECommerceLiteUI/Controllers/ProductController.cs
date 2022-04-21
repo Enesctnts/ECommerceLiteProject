@@ -183,8 +183,7 @@ namespace ECommerceLiteUI.Controllers
                                 string guid = Guid.NewGuid().ToString().Replace("-", "");
                                 //ProductPictures/iphone13/20202020/iphone13-guid.jpg
                                 string filePath = Server.MapPath
-                                    ($"~/ProductPictures/{productName}/{model.ProductCode}/" +
-                                    $"{productName}-{guid}{extensionName}");
+                                    ($"~/ProductPictures/{productName}/{model.ProductCode}/" +  $"{productName}-{guid}{extensionName}");
                                 if (!Directory.Exists(directoryPath))
                                 {
                                     Directory.CreateDirectory(directoryPath);

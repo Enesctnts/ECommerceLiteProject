@@ -5,7 +5,27 @@
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
 
-<!-- buraya TempData ile sepet gelicek -->
+@if (TempData["AddToCartSuccess"] != null)
+{
+    <div class="callout callout-danger">@TempData["AddToCartSuccess"]</div>
+}
+
+@if (TempData["AddToCartFailed"] != null)
+{
+    <div class="callout callout-danger">@TempData["BuyFailed"]</div>
+}
+
+@if (TempData["BuyFailed"] != null)
+{
+    <div class="callout callout-danger">@TempData["BuyFailed"]</div>
+}
+
+@if (TempData["BuySuccess"] != null)
+{
+    <div class="callout callout-success">@TempData["BuySuccess"]</div>
+}
+
+
 <!-- section title -->
 <div class="col-md-12">
     <div class="section-title">
@@ -44,7 +64,7 @@
                     {
                         <!-- product -->
                         <div class="product">
-                           
+
                             <div class="product-img">
 
                                 @if (item.PicturesOfProduct.Count > 0)
@@ -101,7 +121,7 @@
                                     Sepete Ekle
                                 </a>
                             </div>
-                        
+
                         </div>
                         <!-- /product -->
                     }
