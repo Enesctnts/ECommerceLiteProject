@@ -14,6 +14,7 @@ using System.Drawing;
 using ECommerceLiteBLL.Settings;
 using ECommerceLiteEntity.ViewModels;
 using ECommerceLiteBLL.Account.MembershipTools;
+using ECommerceLiteUI.LogManaging;
 
 namespace ECommerceLiteUI.Controllers
 {
@@ -28,7 +29,7 @@ namespace ECommerceLiteUI.Controllers
         public ActionResult Index()
         {
             //Ana kategorileri viewbag ile sayfaya gönderelim
-            var categoryList = myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId == null).Take(6).ToList();
+            var categoryList = myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId == null).Take(3).ToList();
 
             ViewBag.CategoryList = categoryList.OrderByDescending(x => x.Id).ToList();
 
@@ -157,7 +158,7 @@ namespace ECommerceLiteUI.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult> Buy()
         {
             try
@@ -235,55 +236,52 @@ namespace ECommerceLiteUI.Controllers
                     {
                         //QR kodu eklenmiş email gönderilecek
                         #region SendOrderEmailWithQR
-                        QRCodeGenerator myQRCodeGenerator = new QRCodeGenerator();
-                        QRCodeData myQRCodeData = myQRCodeGenerator.CreateQrCode(
-                            customerOrder.OrderNumber, QRCodeGenerator.ECCLevel.Q);
-                        QRCode myQRCode = new QRCode(myQRCodeData);
-                        Bitmap QRBitmap = myQRCode.GetGraphic(60);
-                        byte[] bitmapArray = BitmapToByteArray(QRBitmap);
-                        string qrUri = string.Format("data:image/png;base64,{0}",
-                            Convert.ToBase64String(bitmapArray));
-
-                        //Emailde gidecek olan ürünleri listeye alalım
-                        List<OrderDetail> orderList = new List<OrderDetail>();
-                        orderList = myOrderDetailRepo.AsQueryable().
-                            Where(x => x.OrderId == customerOrder.Id).ToList();
-
-                        string message = $"Merhaba {user.Name} {user.Surname} <br/> <br/>"
-                                 + $"{orderList.Count} adet ürünlerinizin siparişini aldık. <br/> "
-                                 + $"Toplam Tutar:{orderList.Sum(x => x.TotalPrice)} ₺ <br/> <br/>"
-                                 + $"Sipariş Numarası: {customerOrder.OrderNumber} <br/> <br/>"
-                                 + $"<table><tr><th>Ürün Adı</th><th>Adet</th><th>Birim Fiyat</th>"
-                                 + $"<th>İndirim</th><th>Toplam</th></tr>";
-
-                        foreach (var item in orderList)
-                        {
-                            var product = myProductRepo.GetById(item.ProductId);
-                            message += $"<tr><td>{product.ProductName}</td>"
-                                    + $"<td>{item.Quantity}</td>"
-                                    + $"<td>{item.ProductPrice} ₺</td>"
-                                    + $"<td>{item.Discount} %</td>"
-                                    + $"<td>{item.TotalPrice} ₺</td></tr>";
-                        }
 
                         string siteUrl =
-                     Request.Url.Scheme + Uri.SchemeDelimiter
-                     + Request.Url.Host
-                     + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port);
+                        Request.Url.Scheme + Uri.SchemeDelimiter
+                        + Request.Url.Host
+                        + (Request.Url.IsDefaultPort ? "" : ":" + Request.Url.Port);
+                        siteUrl += "/Home/Order/" + customerOrder.Id;
 
-                        message += $"</table><br/>Siparişinize ait QR Kodunuz: <br/> <br/>" +
-                       $"<a href='{siteUrl}/Home/Order/{customerOrder.Id}'>" +
-                                    $"<img src=\"{qrUri}\" height=250px;  width=250px; class='img-thumbnail' /></a>";
-                        await SiteSettings.SendMail(new MailModel()
+                        QRCodeGenerator QRGenerator = new QRCodeGenerator();
+                        QRCodeData QRData = QRGenerator.CreateQrCode(siteUrl, QRCodeGenerator.ECCLevel.Q);
+                        QRCode QRCode = new QRCode(QRData);
+                        Bitmap QRBitmap = QRCode.GetGraphic(60);
+                        byte[] bitmapArray = BitmapToByteArray(QRBitmap);
+
+                        List<OrderDetail> orderDetailList =
+                         new List<OrderDetail>();
+                        orderDetailList = myOrderDetailRepo.AsQueryable()
+                            .Where(x => x.OrderId == customerOrder.Id).ToList();
+
+                        string message = $"Merhaba {user.Name} {user.Surname} <br/><br/>" +
+                        $"{orderDetailList.Sum(x => x.Quantity)} adet ürünlerinizin siparişini aldık.<br/><br/>" +
+                        $"Toplam Tutar:{orderDetailList.Sum(x => x.TotalPrice).ToString()} ₺ <br/> <br/>" +
+                        $"<table><tr><th>Ürün Adı</th><th>Adet</th><th>Birim Fiyat</th><th>Toplam</th></tr>";
+                        foreach (var item in orderDetailList)
+                        {
+                            message += $"<tr><td>{myProductRepo.GetById(item.ProductId).ProductName}</td><td>{item.Quantity}</td><td>{item.TotalPrice}</td></tr>";
+                        }
+
+
+                        message += "</table><br/>Siparişinize ait QR kodunuz aşağıdadır. <br/><br/>";
+
+                        SiteSettings.SendMail(bitmapArray, new MailModel()
                         {
                             To = user.Email,
-                            Subject = "ECommerceLite 303 - Siparişiniz alındı",
+                            Subject = "ECommerceLite - Siparişiniz alındı.",
                             Message = message
-
                         });
-                        TempData["BuySuccess"] = "Siparişiniz oluşturuldu. Sipariş Numarası: " + customerOrder.OrderNumber;
-                        return RedirectToAction("Index", "Home");
+
+
                         #endregion
+
+                        TempData["BuySuccess"] = "Siparişiniz oluşturuldu. Sipariş Numarası: " + customerOrder.OrderNumber;
+                        //temizlik
+                        Session["ShoppingCart"] = null;
+                        Logger.LogMessage($"{user.Name} {user.Surname} {orderDetailList.Sum(x => x.TotalPrice)} liralık alışveriş yaptı", "Home/Buy");
+                        return RedirectToAction("Index", "Home");
+
                     }
                     else
                     {
@@ -313,7 +311,7 @@ namespace ECommerceLiteUI.Controllers
             }
             catch (Exception ex)
             {
-                //ex loglanacak
+                Logger.LogMessage($"Satın alma işleminde hata: " + ex.ToString(), "Home/Buy", MembershipTools.GetUser().Id);
                 TempData["BuyFailed"] = "Beklenmedik bir hata nedeniyle siparişiniz oluşturulamadı";
                 return RedirectToAction("Index", "Home");
             }
