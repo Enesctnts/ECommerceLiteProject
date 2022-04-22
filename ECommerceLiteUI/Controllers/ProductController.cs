@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace ECommerceLiteUI.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         //Bu controllera Admin gibi  yetkili kişiler erşebilcektir. Bu arada ürünlerin listelenmesi, ekleme, silme, güncelleme işlemleri yapılacaktır
@@ -24,7 +24,7 @@ namespace ECommerceLiteUI.Controllers
         public ActionResult ProductList(int? page=1 , string Search = "")
         {
             //Alt kategorileri repo aracılığıyla dbden çektik
-            ViewBag.SubCategories = myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId != null).ToList();
+            ViewBag.SubCategories = GetSubCategories();
 
             //Sayfaya bazı bilgiler göndereceğiz
 
@@ -87,8 +87,7 @@ namespace ECommerceLiteUI.Controllers
             //Linq
             //Select*from Categories where BaseCategoryId is not null bu sorguyu yapar. bu sorgudan 2 değer gelir. bu sorguyu yaparak verileri getiriyoruz bu olayı bize As@ueryable sağlıyor. Enumerable da kullanılıyor o butün veriyi getiriyo sonra aralarından bunları çekiyo.
 
-            myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId != null).ToList().
-                ForEach(x => subCategories.Add(new SelectListItem()
+            GetSubCategories().ForEach(x => subCategories.Add(new SelectListItem()
                 {
                     Text = x.CategoryName,
                     Value = x.Id.ToString()
@@ -109,8 +108,7 @@ namespace ECommerceLiteUI.Controllers
                 //Linq
                 //Select*from Categories where BaseCategoryId is not null bu sorguyu yapar. bu sorgudan 2 değer gelir. bu sorguyu yaparak verileri getiriyoruz bu olayı bize As@ueryable sağlıyor. Enumerable da kullanılıyor o butün veriyi getiriyo sonra aralarından bunları çekiyo.
 
-                myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId != null).ToList().
-                    ForEach(x => subCategories.Add(new SelectListItem()
+                GetSubCategories().ForEach(x => subCategories.Add(new SelectListItem()
                     {
                         Text = x.CategoryName,
                         Value = x.Id.ToString()
@@ -327,7 +325,31 @@ namespace ECommerceLiteUI.Controllers
             }
         }
 
+        public List<Category> GetSubCategories()
+        {
+            //Alt kategorisi olmasına rağmen Product ekleme sayfasındaki comboya gelen kategoriler var.Bu bugı bir metot ekleyerek çözümledik.
+            //Metotta kategorinin  idsi kategori tablosunda basecategoryId alanında geçiyorsa continue ile o kategoriyi atladık ve listemize almadık.
+            //Böylece sadece çocuk kategoriler gelecektir.Ebeveyn kategoriler sayfaya gelemeyecektir.
 
-    
+            //eğer caterpo.asq().where(x => x.bas == id)
+            //continue;
+            List<Category> returnList = new List<Category>();
+            var categoryList = myCategoryRepo.AsQueryable().Where(x => x.BaseCategoryId != null).ToList();
+            foreach (var item in categoryList)
+            {
+                if (myCategoryRepo.AsQueryable().Count(x => x.BaseCategoryId == item.Id) > 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    returnList.Add(item);
+                }
+            }
+
+
+            return returnList;
+        }
+
     }
 }
