@@ -60,49 +60,72 @@ namespace ECommerceLiteUI.Models
 
         public void GetCategory()
         {
+
             if (CategoryId > 0)
             {
-                //ÖRN: Elektronik kat.--> Akıllı Telefon kat. --> ürün(iphone 13 pro max)
                 CategoryOfProduct = myCategoryRepo.GetById(CategoryId);
-                CategoryOfProduct.CategoryList = new List<Category>();
-                // Akıllı telefon kat artık elimde!
-                // Akıllı telefon kat. bir üst kategorisi var mı?
-                // ÖRN: Elek--> Akkıl tel --> applegiller
-                if (CategoryOfProduct.BaseCategoryId != null
-                    && CategoryOfProduct.BaseCategoryId > 0)
+                if (CategoryOfProduct.BaseCategoryId > 0)
                 {
-                    CategoryOfProduct.BaseCategory = myCategoryRepo.GetById
-                        (CategoryOfProduct.BaseCategoryId.Value);
-                    CategoryOfProduct.CategoryList.Add(CategoryOfProduct.BaseCategory);
+                    CategoryOfProduct.CategoryList = new List<Category>();
 
+                    CategoryOfProduct.BaseCategory = myCategoryRepo.GetById(CategoryOfProduct.BaseCategoryId.Value);
+                    CategoryOfProduct.CategoryList.Add(CategoryOfProduct.BaseCategory);
                     bool isOver = false;
-                    Category currentBaseCategory = CategoryOfProduct.BaseCategory;
+                    Category theBaseCategory = CategoryOfProduct.BaseCategory;
                     while (!isOver)
                     {
-                        if (currentBaseCategory.BaseCategoryId != null
-                            && currentBaseCategory.BaseCategoryId > 0)
+
+                        if (theBaseCategory.BaseCategoryId > 0)
                         {
-                            // mevcuttaki ana kategorinin üst kategorisi varmış
-                            // onu alalım
-                            currentBaseCategory = myCategoryRepo.GetById(currentBaseCategory.BaseCategoryId.Value);
-                            CategoryOfProduct.CategoryList.Add(currentBaseCategory);
+                            CategoryOfProduct.CategoryList.Add(myCategoryRepo.GetById(theBaseCategory.BaseCategoryId.Value));
+                            theBaseCategory = myCategoryRepo.GetById(theBaseCategory.BaseCategoryId.Value);
                         }
                         else
                         {
                             isOver = true;
                         }
                     }
-
-
-
-
-
-                    CategoryOfProduct.CategoryList =
-                        CategoryOfProduct.CategoryList.OrderBy(x => x.Id).ToList();
-
-
+                    CategoryOfProduct.CategoryList = CategoryOfProduct.CategoryList.OrderBy(x => x.Id).ToList();
                 }
             }
+
+            //if (CategoryId > 0)
+            //{
+            //    //ÖRN: Elektronik kat.--> Akıllı Telefon kat. --> ürün(iphone 13 pro max)
+            //    CategoryOfProduct = myCategoryRepo.GetById(CategoryId);
+            //    CategoryOfProduct.CategoryList = new List<Category>();
+            //    // Akıllı telefon kat artık elimde!
+            //    // Akıllı telefon kat. bir üst kategorisi var mı?
+            //    // ÖRN: Elek--> Akkıl tel --> applegiller
+            //    if (CategoryOfProduct.BaseCategoryId != null
+            //        && CategoryOfProduct.BaseCategoryId > 0)
+            //    {
+            //        CategoryOfProduct.BaseCategory = myCategoryRepo.GetById
+            //            (CategoryOfProduct.BaseCategoryId.Value);
+            //        CategoryOfProduct.CategoryList.Add(CategoryOfProduct.BaseCategory);
+
+            //        bool isOver = false;
+            //        Category currentBaseCategory = CategoryOfProduct.BaseCategory;
+            //        while (!isOver)
+            //        {
+            //            if (currentBaseCategory.BaseCategoryId != null
+            //                && currentBaseCategory.BaseCategoryId > 0)
+            //            {
+            //                // mevcuttaki ana kategorinin üst kategorisi varmış
+            //                // onu alalım
+            //                currentBaseCategory = myCategoryRepo.GetById(currentBaseCategory.BaseCategoryId.Value);
+            //                CategoryOfProduct.CategoryList.Add(currentBaseCategory);
+            //            }
+            //            else
+            //            {
+            //                isOver = true;
+            //            }
+            //        }
+            //        CategoryOfProduct.CategoryList =
+            //            CategoryOfProduct.CategoryList.OrderBy(x => x.Id).ToList();
+
+            //    }
+            //}
         }
 
     }
