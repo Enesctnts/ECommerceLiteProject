@@ -6,18 +6,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
 using System.Net;
+using System.Net.Mime;
 
 namespace ECommerceLiteBLL.Settings
 {
     public class SiteSettings
     {
 
-        //To Do: Mail adresini wep config dosyasından öğrenelim.
-        public static string SiteMail { get; set; } = "nayazilim303@gmail.com ";
+       //To Do: Mail adresini webconfig dosyasından çekmeyi de öğrenelim
+
+        public static string SiteMail { get; set; } = "nayazilim303@gmail.com";
         public static string SiteMailPassword { get; set; } = "betul303303";
         public static string SiteMailSmtpHost { get; set; } = "smtp.gmail.com";
         public static int SiteMailSmtpPort { get; set; } = 587;
-        public static bool SiteMailEnableSSL { get; set; } = true;
+
+        public static bool SiteMailEnableSSL = true;
 
         public async static Task SendMail(MailModel model)
         {
@@ -31,21 +34,21 @@ namespace ECommerceLiteBLL.Settings
                     message.Subject = model.Subject;
                     message.IsBodyHtml = true;
                     message.Body = model.Message;
-                    message.BodyEncoding = Encoding.UTF8;  
-
-                    if (!string.IsNullOrEmpty(model.Cc)) // modeldeki cc boş değilse
+                    message.BodyEncoding = Encoding.UTF8;
+                    if (!string.IsNullOrEmpty(model.Cc))//modeldeki cc boş değilse
                     {
                         message.CC.Add(new MailAddress(model.Cc));
-
                     }
-                    if (!string.IsNullOrEmpty(model.Bcc)) // modeldeki cc boş değilse
+
+                    if (!string.IsNullOrEmpty(model.Bcc))//modeldeki Bcc boş değilse
                     {
                         message.Bcc.Add(new MailAddress(model.Bcc));
                     }
                     var networkCredentials = new NetworkCredential()
                     {
-                        UserName=SiteMail,
-                        Password=SiteMailPassword
+                        UserName = SiteMail,
+                        Password = SiteMailPassword
+
                     };
 
                     smtp.Credentials = networkCredentials;
@@ -58,9 +61,124 @@ namespace ECommerceLiteBLL.Settings
             }
             catch (Exception ex)
             {
-                //To Do: ex loglanacak
-                
-                
+
+                //To Do : ex loglanacak
+            }
+        }
+
+
+        //Bu metod bir hata veriyor,hataya bakıp çözmeye çalışacağız.
+        //public async static Task SendMail(byte[] array, MailModel model)
+        //{
+        //    try
+        //    {
+        //        System.IO.MemoryStream bitmap = new System.IO.MemoryStream(array);
+        //        LinkedResource resource = new LinkedResource(bitmap, MediaTypeNames.Image.Jpeg);
+        //        resource.ContentId = "Icon";
+        //        string htmlBody = @"<html><head><style>"
+        //                          + "body{font-family:'Calibri',sans-serif;}</style></head>"
+        //                          + "<body>" + model.Message
+        //                          + "<img style='float:left' width:'250px' height='250px' src='cid:" + resource.ContentId + "'/>"
+        //                          + "</body></html>";
+
+        //        var message = new MailMessage();
+        //        message.To.Add(new MailAddress(model.To));
+        //        message.From = new MailAddress(SiteMail);
+        //        message.Subject = model.Subject;
+        //        message.IsBodyHtml = true;
+        //        message.Body = htmlBody;
+        //        message.BodyEncoding = Encoding.UTF8;
+        //        if (!string.IsNullOrEmpty(model.Cc))//modeldeki cc boş değilse
+        //        {
+        //            message.CC.Add(new MailAddress(model.Cc));
+        //        }
+        //        if (!string.IsNullOrEmpty(model.Bcc))//modeldeki Bcc boş değilse
+        //        {
+        //            message.Bcc.Add(new MailAddress(model.Bcc));
+        //        }
+        //        var networkCredentials = new NetworkCredential()
+        //        {
+        //            UserName = SiteMail,
+        //            Password = SiteMailPassword
+
+        //        };
+
+
+        //        AlternateView alternateView =
+        //            AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html);
+        //        alternateView.LinkedResources.Add(resource);
+        //        message.AlternateViews.Add(alternateView);
+
+        //        SmtpClient smtp = new SmtpClient();
+        //        smtp.Credentials = networkCredentials;
+        //        smtp.Host = SiteMailSmtpHost;
+        //        smtp.Port = SiteMailSmtpPort;
+        //        smtp.EnableSsl = true;
+        //        await smtp.SendMailAsync(message);
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        // ex loglanacak
+        //    }
+        //}
+
+        public static void SendMail(byte[] array, MailModel model)
+        {
+            try
+            {
+                System.IO.MemoryStream bitmap = new System.IO.MemoryStream(array);
+                LinkedResource resource = new LinkedResource(bitmap, MediaTypeNames.Image.Jpeg);
+                resource.ContentId = "Icon";
+                string htmlBody = @"<html><head><style>"
+                                  + "body{font-family:'Calibri',sans-serif;}</style></head>"
+                                  + "<body>" + model.Message
+                                  + "<img style='float:left' width:'250px' height='250px' src='cid:" + resource.ContentId + "'/>"
+                                  + "</body></html>";
+
+                var message = new MailMessage();
+                message.To.Add(new MailAddress(model.To));
+                message.From = new MailAddress(SiteMail);
+                message.Subject = model.Subject;
+                message.IsBodyHtml = true;
+                message.Body = htmlBody;
+                message.BodyEncoding = Encoding.UTF8;
+                if (!string.IsNullOrEmpty(model.Cc))//modeldeki cc boş değilse
+                {
+                    message.CC.Add(new MailAddress(model.Cc));
+                }
+                if (!string.IsNullOrEmpty(model.Bcc))//modeldeki Bcc boş değilse
+                {
+                    message.Bcc.Add(new MailAddress(model.Bcc));
+                }
+                var networkCredentials = new NetworkCredential()
+                {
+                    UserName = SiteMail,
+                    Password = SiteMailPassword
+
+                };
+
+
+                AlternateView alternateView =
+                    AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html);
+                alternateView.LinkedResources.Add(resource);
+                message.AlternateViews.Add(alternateView);
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Credentials = networkCredentials;
+                smtp.Host = SiteMailSmtpHost;
+                smtp.Port = SiteMailSmtpPort;
+                smtp.EnableSsl = true;
+                smtp.Send(message);
+
+
+            }
+            catch (Exception ex)
+            {
+
+                // ex loglanacak
             }
         }
 
@@ -94,6 +212,6 @@ namespace ECommerceLiteBLL.Settings
 
             return resultString.ToLower();
         }
-        
+
     }
 }
