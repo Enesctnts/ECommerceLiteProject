@@ -31,15 +31,22 @@ namespace ECommerceLiteUI.Controllers
 
         public PartialViewResult ShoppingCart()
         {
-            var shoppingCart=Session["ShoppingCart"] as List<ProductViewModel>;
-
-            if (shoppingCart==null)
+            var shoppingCart = Session["ShoppingCart"]  as List<ProductViewModel>;
+            if (shoppingCart == null)
             {
-                return PartialView("_PartialShoppingCart", new List<ProductViewModel>());
+                return PartialView("_PartialShoppingCart",
+                    new List<ProductViewModel>());
             }
             else
             {
-                return PartialView("_PartialShoppingCart", shoppingCart);      
+                foreach (var item in shoppingCart)
+                {
+                    item.GetProductPicture();
+                }
+                // yada linq foreach ile daha kısa işlem yapabilirsiniz.
+                //  shoppingCart.ForEach(x => x.GetProductPictures());
+
+                return PartialView("_PartialShoppingCart", shoppingCart);
             }
 
         }
