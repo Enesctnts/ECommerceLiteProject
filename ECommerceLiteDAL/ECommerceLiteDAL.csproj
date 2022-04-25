@@ -90,6 +90,10 @@
     <Compile Include="Migrations\202204180741428_ProductPictureTableUpdate.designer.cs">
       <DependentUpon>202204180741428_ProductPictureTableUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204251045280_RemovedFK.cs" />
+    <Compile Include="Migrations\202204251045280_RemovedFK.designer.cs">
+      <DependentUpon>202204251045280_RemovedFK.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MyContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202204180741428_ProductPictureTableUpdate.resx">
       <DependentUpon>202204180741428_ProductPictureTableUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204251045280_RemovedFK.resx">
+      <DependentUpon>202204251045280_RemovedFK.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
