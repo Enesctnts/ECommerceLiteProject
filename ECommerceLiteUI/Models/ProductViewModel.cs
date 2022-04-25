@@ -61,6 +61,8 @@ namespace ECommerceLiteUI.Models
 
         public Category CategoryOfProduct { get; set; }
 
+        public  List<Category> CategoryList { get; set; } // Bunu yapmamızın sebebi sonsuz döngüye giriyordu. Foreignkey ve virtualları yorum satırına aldık ve veritabanında foreignkey bağlantıları kopardık ve add-migration ve update-database yaparak veritabanına bildirdik. o virtualları kapattıgımız için onun yerine bunu yazdık.
+
         public List<ProductPicture> PicturesOfProduct { get; set; } = new List<ProductPicture>();
         //Ürün eklenirken ürüne ait resimler seçilebilir. Seçilen resimleri hafızada tutacak property
         public List<HttpPostedFileBase> Files { get; set; } = new List<HttpPostedFileBase>();
@@ -80,19 +82,16 @@ namespace ECommerceLiteUI.Models
             {
                 //ÖRN: Elektronik kat.--> Akıllı Telefon kat. --> ürün(iphone 13 pro max)
                 CategoryOfProduct = myCategoryRepo.GetById(CategoryId);
-                CategoryOfProduct.CategoryList = new List<Category>();
+                CategoryList = new List<Category>();
+                CategoryList.Add(CategoryOfProduct);
                 // Akıllı telefon kat artık elimde!
                 // Akıllı telefon kat. bir üst kategorisi var mı?
                 // ÖRN: Elek--> Akkıl tel --> applegiller
                 if (CategoryOfProduct.BaseCategoryId != null
                     && CategoryOfProduct.BaseCategoryId > 0)
                 {
-                    //               CategoryOfProduct.BaseCategory = myCategoryRepo.GetById
-                    //(CategoryOfProduct.BaseCategoryId.Value);
-                    CategoryOfProduct.CategoryList.Add(CategoryOfProduct.BaseCategory);
-
                     bool isOver = false;
-                    Category currentBaseCategory = CategoryOfProduct.BaseCategory;
+                    Category currentBaseCategory = CategoryOfProduct;
                     while (!isOver)
                     {
                         if (currentBaseCategory.BaseCategoryId != null
@@ -101,15 +100,15 @@ namespace ECommerceLiteUI.Models
                             // mevcuttaki ana kategorinin üst kategorisi varmış
                             // onu alalım
                             //currentBaseCategory = myCategoryRepo.GetById(currentBaseCategory.BaseCategoryId.Value);
-                            CategoryOfProduct.CategoryList.Add(currentBaseCategory);
-                            currentBaseCategory = currentBaseCategory.BaseCategory;
+                            currentBaseCategory = myCategoryRepo.GetById(currentBaseCategory.BaseCategoryId.Value);
+                            CategoryList.Add(currentBaseCategory);
                         }
                         else
                         {
                             isOver = true;
                         }
                     }
-                    CategoryOfProduct.CategoryList = CategoryOfProduct.CategoryList.OrderBy(x => x.Id).ToList();
+                    CategoryList = CategoryList.OrderBy(x => x.Id).ToList();
 
 
                 }
