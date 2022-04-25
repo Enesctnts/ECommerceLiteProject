@@ -7,13 +7,13 @@ namespace ECommerceLiteDAL.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class ForeignKey : IMigrationMetadata
+    public sealed partial class RemovedFK : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ForeignKey));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(RemovedFK));
         
         string IMigrationMetadata.Id
         {
-            get { return "202204250858177_ForeignKey"; }
+            get { return "202204251045280_RemovedFK"; }
         }
         
         string IMigrationMetadata.Source
