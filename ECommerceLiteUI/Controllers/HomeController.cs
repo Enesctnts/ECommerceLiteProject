@@ -157,8 +157,7 @@ namespace ECommerceLiteUI.Controllers
             }
         }
 
-
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult> Buy()
         {
             try
@@ -316,5 +315,38 @@ namespace ECommerceLiteUI.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
+    
+        public ActionResult ProductDetail(int? id)
+        {
+            try
+            {
+                if (id==null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if (id >0)
+                {
+                    // ürünü bulacagız
+                    ProductViewModel model = myProductRepo.GetById(id.Value).Adapt<ProductViewModel>();
+                    model.GetCategory();
+                    model.GetProductPicture();
+                    return View(model);
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Ürün bulunamadı!");
+                    return View(new ProductViewModel());
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "Beklenmeyen bir hata oluştu!");
+                return View(new ProductViewModel());    
+                    
+            }
+        }
+    
+    
     }
 }
