@@ -18,10 +18,13 @@ namespace ECommerceLiteEntity.Models
         public string CategoryDescription { get; set; }
 
         public int? BaseCategoryId { get; set; }
-        [ForeignKey("BaseCategoryId")]
-        public virtual Category BaseCategory { get; set; }
+
+        //[ForeignKey("BaseCategoryId")]
+        //public virtual Category BaseCategory { get; set; }
+        //public virtual List<Category> CategoryList { get; set; }
+
+
         public virtual List<Product> ProductList { get; set; }
-        public virtual List<Category> CategoryList { get; set; }
 
         //[Required]
         //[StringLength(100,MinimumLength =2,ErrorMessage ="Kategori adı 2 ile 100 karakter aralıgında olmalıdır")]
