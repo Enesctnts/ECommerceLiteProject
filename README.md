@@ -24,7 +24,7 @@
 <h5>Sepetim<h5>
 <img src=https://github.com/Enesctnts/ECommerceLiteProject/blob/master/ECommerceLiteUI/AdminLTE/ProjectPicture/ProjePictures10.png/>
   
-<h5Sipariş Oluşturuldu<h5>
+<h5>Sipariş Oluşturuldu<h5>
 <img src=https://github.com/Enesctnts/ECommerceLiteProject/blob/master/ECommerceLiteUI/AdminLTE/ProjectPicture/ProjePictures11.png/>
   
 <h5>Yeni Şifre Talebi<h5>
@@ -45,7 +45,7 @@
 <h5>Ürünler Ekleme<h5>
 <img src=https://github.com/Enesctnts/ECommerceLiteProject/blob/master/ECommerceLiteUI/AdminLTE/ProjectPicture/ProjePictures14.png/>
 
- <h5>Sistemdeki Ürünler Arama<h5>
+<h5>Sistemdeki Ürünler Arama<h5>
 <img src=https://github.com/Enesctnts/ECommerceLiteProject/blob/master/ECommerceLiteUI/AdminLTE/ProjectPicture/ProjePictures16.png/>   
   
     
