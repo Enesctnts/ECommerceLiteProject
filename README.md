@@ -6,10 +6,8 @@ bilgileri güncelleme gibi bir çok işlemin yapıldığı E-Ticaret sitesidir. 
 
 # Kullanılan Teknolojiler
   
-<h3> Kategoriye göre başlık listeleme, kategori ekleme, silme, güncelleme işlemleri.
-Yazar paneli, yazarların listelenmesi, yazar ekleme. Admin paneli, admin
-ekleme, mesajlaşma işlemleri, admin rollerine göre işlemler ve login
-işlemlerinin yapıldığı geniş çaplı bir sözlük sitesidir.<h3>
+<h3> Asp.Net MVC, N-layer Architecture, MSSQL, CodeFirst, Generic Repository,
+AspNetUsers(IdentityUser, IdentityRole) <h3>
 <br/>
     
 <h5>Kayıt Ol Sayfası<h5>
