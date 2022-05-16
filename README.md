@@ -3,6 +3,12 @@
 <h3>E-Ticaret Projesi<h3>
 <br/>
   
+<h3> Kayıt olma, ürün ekleme, ürün silme, ürün sepeti oluşturma, ürün satın alma,
+sipariş detaylarını mail adresine gönderme, şifremi unuttum işlemi, hesap
+bilgileri güncelleme gibi bir çok işlemin yapıldığı E-Ticaret sitesidir. <h3>
+  
+<br/>
+    
 <h5>Kayıt Ol Sayfası<h5>
 <img src=https://github.com/Enesctnts/ECommerceLiteProject/blob/master/ECommerceLiteUI/AdminLTE/ProjectPicture/ProjePictures6.png/>
   
