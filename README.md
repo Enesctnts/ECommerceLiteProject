@@ -1,12 +1,15 @@
 # ECommerceLiteProject
 
 <h3>E-Ticaret Projesi<h3>
-<br/>
   
 <h3> Kayıt olma, ürün ekleme, ürün silme, ürün sepeti oluşturma, ürün satın alma,
 sipariş detaylarını mail adresine gönderme, şifremi unuttum işlemi, hesap
 bilgileri güncelleme gibi bir çok işlemin yapıldığı E-Ticaret sitesidir. <h3>
-  
+
+<h3> Kategoriye göre başlık listeleme, kategori ekleme, silme, güncelleme işlemleri.
+Yazar paneli, yazarların listelenmesi, yazar ekleme. Admin paneli, admin
+ekleme, mesajlaşma işlemleri, admin rollerine göre işlemler ve login
+işlemlerinin yapıldığı geniş çaplı bir sözlük sitesidir.<h3>
 <br/>
     
 <h5>Kayıt Ol Sayfası<h5>
