@@ -1,6 +1,4 @@
-# ECommerceLiteProject
-
-<h3>E-Ticaret Projesi<h3>
+# E-Ticaret Projesi
   
 <h3> Kayıt olma, ürün ekleme, ürün silme, ürün sepeti oluşturma, ürün satın alma,
 sipariş detaylarını mail adresine gönderme, şifremi unuttum işlemi, hesap
