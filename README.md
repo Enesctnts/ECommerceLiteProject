@@ -4,7 +4,7 @@
 sipariş detaylarını mail adresine gönderme, şifremi unuttum işlemi, hesap
 bilgileri güncelleme gibi bir çok işlemin yapıldığı E-Ticaret sitesidir. <h3>
 
-#Kullanılan Teknolojiler
+# Kullanılan Teknolojiler
   
 <h3> Kategoriye göre başlık listeleme, kategori ekleme, silme, güncelleme işlemleri.
 Yazar paneli, yazarların listelenmesi, yazar ekleme. Admin paneli, admin
